@@ -1,0 +1,25 @@
+{
+  "name": "neanderthal",
+  "version": "0.0.1",
+  "description": "static blog machine",
+  "main": "build.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node build.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MH15/neanderthal.git"
+  },
+  "author": "Matt Hall",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MH15/neanderthal/issues"
+  },
+  "homepage": "https://github.com/MH15/neanderthal#readme",
+  "devDependencies": {
+    "fs-extra": "^8.1.0",
+    "marked": "^1.1.0",
+    "mustache": "^4.0.1"
+  }
+}
