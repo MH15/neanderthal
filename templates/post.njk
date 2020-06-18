@@ -1,5 +1,29 @@
 {% extends "templates/base.njk" %}
 
 {% block body %}
-    {{ markdown | safe }}
+    <h1>{{attributes.title}}</h1>
+    <p>
+        By 
+        {# Loop through all authors #}
+        {% set comma = joiner(", ") %}
+        {% for author in attributes.authors -%}
+            {{ comma() }}{{ author -}}
+        {% else %}
+            No author.
+        {% endfor %}
+    </p>
+    <p>
+        Tagged:
+        {# Loop through all tags #}
+        {% set space = joiner(" ") %}
+        {% for tag in attributes.tags -%}
+            {{ space() }}
+            <a href="">{{ tag -}}</a>
+        {% else %}
+            No author.
+        {% endfor %}
+    </p>
+    <article>
+        {{ markdown | safe }}
+    </article >
 {% endblock %}

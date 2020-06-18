@@ -5,18 +5,20 @@ const path = require("path")
 const frontmatter = require('front-matter')
 const { resolve } = require("path")
 
-
+const CLEAN_BUILD = true;
 
 
 
 // console.log("neanderthal time")
 
+if (CLEAN_BUILD) {
+	// Delete then create the `build` directory
+	deleteDir("build")
+	makeDir("build")
+	// Create `build/blog`
+	makeDir("build/blog")
 
-// Delete then create the `build` directory
-deleteDir("build")
-makeDir("build")
-// Create `build/blog`
-makeDir("build/blog")
+}
 
 
 
@@ -34,7 +36,7 @@ async function build() {
 				makeDir(postPath)
 				let indexPath = path.join(folderPath, "index.md")
 				let html = await renderMarkdownPage(indexPath, templatesMap)
-				console.log(html)
+				// console.log(html)
 				let buildPath = path.join(postPath, "index.html")
 				await writeFile(buildPath, html)
 			}
@@ -58,10 +60,11 @@ function renderMarkdownPage(filepath, templatesMap) {
 
 			let markdown = marked(content.body)
 			let template = templatesMap.get("templates/post.njk")
-			console.log(template)
 			let html = nunjucks.renderString(template, {
-				markdown,
-				title: attributes.title || null
+				markdown: markdown,
+				title: attributes.title || null,
+				authors: attributes.authors || [],
+				attributes: attributes
 			})
 			resolve(html)
 		})
