@@ -1,11 +1,11 @@
-
+{# All pages on your site should inherit from this base template #}
 <html>
 
 <html lang="en">
 <head>
   <meta charset="utf-8">
 
-  <title></title>
+  <title>{{ title }}</title>
   <meta name="description" content="TODO">
   <meta name="author" content="TODO">
 
@@ -15,11 +15,9 @@
 
 <body>
 
-    
-    <h1 id="second-post">Second post</h1>
-<p>yeetus</p>
-
-
+    {% block body %}
+      Default content
+    {% endblock %}
 
 
 </body>

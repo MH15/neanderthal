@@ -1,7 +1,8 @@
-const mustache = require("mustache")
+const nunjucks = require("nunjucks")
 const marked = require("marked")
 const fs = require("fs-extra")
 const path = require("path")
+const frontmatter = require('front-matter')
 const { resolve } = require("path")
 
 
@@ -21,7 +22,7 @@ makeDir("build/blog")
 
 async function build() {
 	let templatesMap = await loadTemplates()
-	console.log("Templates: ", templatesMap)
+	// console.log("Templates: ", templatesMap)
 
 
 	// From the root `posts` directory, parse every folder as its own post, using the “post” template from `templates/post.html`.
@@ -32,10 +33,10 @@ async function build() {
 				let postPath = path.join("build", "blog", folder)
 				makeDir(postPath)
 				let indexPath = path.join(folderPath, "index.md")
-				let html = await renderMarkdownPage(indexPath, templatesMap.get("templates/post.mustache"))
+				let html = await renderMarkdownPage(indexPath, templatesMap)
 				console.log(html)
 				let buildPath = path.join(postPath, "index.html")
-				writeFile(buildPath, html)
+				await writeFile(buildPath, html)
 			}
 		})
 	})
@@ -47,13 +48,20 @@ build()
 
 
 
-function renderMarkdownPage(filepath, template) {
+function renderMarkdownPage(filepath, templatesMap) {
 	return new Promise((resolve, reject) => {
 		readFile(filepath, (result) => {
-			let markdown = marked(result)
-			// console.log(template)
-			let html = mustache.render(template, {
-				markdown
+			let content = frontmatter(result)
+
+			let attributes = content.attributes
+			console.log(attributes)
+
+			let markdown = marked(content.body)
+			let template = templatesMap.get("templates/post.njk")
+			console.log(template)
+			let html = nunjucks.renderString(template, {
+				markdown,
+				title: attributes.title || null
 			})
 			resolve(html)
 		})
@@ -86,9 +94,18 @@ function deleteDir(dir) {
 }
 
 function writeFile(filepath, content) {
-	let dir = path.parse(filepath).dir
-	makeDir(dir)
-	fs.writeFileSync(filepath, content)
+	return new Promise((resolve, reject) => {
+		let dir = path.parse(filepath).dir
+		makeDir(dir)
+		console.log("WRITING ", dir, filepath)
+		fs.writeFile(filepath, content, (err) => {
+			if (err) {
+				reject(err)
+			}
+			resolve()
+		})
+	})
+
 }
 
 
