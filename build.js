@@ -30,13 +30,27 @@ async function build() {
 	// From the root `posts` directory, parse every folder as its own post, using the “post” template from `templates/post.html`.
 	let blog_posts = await renderBlogPosts(templatesMap)
 
+	// Sort posts by most recent
+	blog_posts.sort(compareDatePublished)
 	// Generate the root blog page as a list of recent posts by date
-	let template = templatesMap.get("templates/blog.njk")
-	let html = nunjucks.renderString(template, {
+	let html = nunjucks.renderString(templatesMap.get("templates/blog.njk"), {
 		title: "Blog Posts",
 		blog_posts
 	})
 	writeFile(path.join("build", "blog", "index.html"), html)
+
+	// From the root `pages` directory, parse every folder as its own page, using the “page” template from `templates/page.njk`.
+	// TODO
+
+	// Copy `pages/index.html` from the pages directory to `public/index.html`. This is the homepage of the app.
+	// TODO
+
+	// Copy all files from `labs` to `public/labs`. Labs are raw html5 for posting projects outside the blog structure.
+	// TODO
+
+	// Generate a directory listing for `labs`
+	// TODO
+
 
 
 
@@ -44,6 +58,13 @@ async function build() {
 
 
 build()
+
+
+function compareDatePublished(a, b) {
+	let dateA = new Date(a.date_published)
+	let dateB = new Date(b.date_published)
+	return dateB.getTime() - dateA.getTime()
+}
 
 
 
@@ -54,7 +75,10 @@ function renderBlogPosts(templatesMap) {
 			if (err) {
 				reject(err)
 			}
-			folders.forEach(async (folder, key) => {
+
+			// Process all blog posts concurrently but wait until last is
+			// processed to return
+			Promise.all(folders.map(async folder => {
 				let folderPath = path.join("posts", folder)
 				if (isDir(folderPath)) {
 					let postPath = path.join("build", "blog", folder)
@@ -64,14 +88,16 @@ function renderBlogPosts(templatesMap) {
 					let buildPath = path.join(postPath, "index.html")
 					await writeFile(buildPath, page.html)
 					// TODO: typescript this
-					blog_posts.push(page)
+					return page
 				}
-
-				// resolve Promise on last loop item
-				if (Object.is(folders.length - 1, key)) {
-					resolve(blog_posts)
-				}
+			})).then(blog_posts => {
+				console.log("LENGTH ", blog_posts.length)
+				resolve(blog_posts)
+			}).catch(err => {
+				console.error(err)
+				reject(err)
 			})
+
 		})
 	})
 }
@@ -100,7 +126,8 @@ function renderMarkdownPage(filepath, templatesMap, folder) {
 			let page = {
 				title: attributes.title,
 				html: html,
-				slug: "blog/" + folder
+				slug: "blog/" + folder,
+				date_published: attributes.date_published
 			}
 			resolve(page)
 		})

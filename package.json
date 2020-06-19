@@ -5,7 +5,8 @@
   "main": "build.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node build.js"
+    "build": "node build.js",
+    "serve": "cd build && static-server"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
     "fs-extra": "^8.1.0",
     "marked": "^1.1.0",
     "mustache": "^4.0.1",
-    "nunjucks": "^3.2.1"
+    "nunjucks": "^3.2.1",
+    "static-server": "^2.2.1"
   }
 }
