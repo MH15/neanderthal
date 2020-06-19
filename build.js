@@ -4,6 +4,7 @@ const fs = require("fs-extra")
 const path = require("path")
 const frontmatter = require('front-matter')
 const { resolve } = require("path")
+const { write } = require("fs")
 
 const CLEAN_BUILD = true;
 
@@ -26,37 +27,65 @@ async function build() {
 	let templatesMap = await loadTemplates()
 	// console.log("Templates: ", templatesMap)
 
-
 	// From the root `posts` directory, parse every folder as its own post, using the “post” template from `templates/post.html`.
-	fs.readdir("posts", (err, folders) => {
-		folders.forEach(async folder => {
-			let folderPath = path.join("posts", folder)
-			if (isDir(folderPath)) {
-				let postPath = path.join("build", "blog", folder)
-				makeDir(postPath)
-				let indexPath = path.join(folderPath, "index.md")
-				let html = await renderMarkdownPage(indexPath, templatesMap)
-				// console.log(html)
-				let buildPath = path.join(postPath, "index.html")
-				await writeFile(buildPath, html)
-			}
-		})
+	let blog_posts = await renderBlogPosts(templatesMap)
+
+	// Generate the root blog page as a list of recent posts by date
+	let template = templatesMap.get("templates/blog.njk")
+	let html = nunjucks.renderString(template, {
+		title: "Blog Posts",
+		blog_posts
 	})
+	writeFile(path.join("build", "blog", "index.html"), html)
+
+
+
 }
+
 
 build()
 
 
 
+function renderBlogPosts(templatesMap) {
+	return new Promise((resolve, reject) => {
+		fs.readdir("posts", (err, folders) => {
+			let blog_posts = []
+			if (err) {
+				reject(err)
+			}
+			folders.forEach(async (folder, key) => {
+				let folderPath = path.join("posts", folder)
+				if (isDir(folderPath)) {
+					let postPath = path.join("build", "blog", folder)
+					makeDir(postPath)
+					let indexPath = path.join(folderPath, "index.md")
+					let page = await renderMarkdownPage(indexPath, templatesMap, folder)
+					let buildPath = path.join(postPath, "index.html")
+					await writeFile(buildPath, page.html)
+					// TODO: typescript this
+					blog_posts.push(page)
+				}
+
+				// resolve Promise on last loop item
+				if (Object.is(folders.length - 1, key)) {
+					resolve(blog_posts)
+				}
+			})
+		})
+	})
+}
 
 
-function renderMarkdownPage(filepath, templatesMap) {
+
+
+
+function renderMarkdownPage(filepath, templatesMap, folder) {
 	return new Promise((resolve, reject) => {
 		readFile(filepath, (result) => {
 			let content = frontmatter(result)
 
 			let attributes = content.attributes
-			console.log(attributes)
 
 			let markdown = marked(content.body)
 			let template = templatesMap.get("templates/post.njk")
@@ -66,7 +95,14 @@ function renderMarkdownPage(filepath, templatesMap) {
 				authors: attributes.authors || [],
 				attributes: attributes
 			})
-			resolve(html)
+
+			// TODO: typescript this
+			let page = {
+				title: attributes.title,
+				html: html,
+				slug: "blog/" + folder
+			}
+			resolve(page)
 		})
 	})
 }
@@ -100,7 +136,6 @@ function writeFile(filepath, content) {
 	return new Promise((resolve, reject) => {
 		let dir = path.parse(filepath).dir
 		makeDir(dir)
-		console.log("WRITING ", dir, filepath)
 		fs.writeFile(filepath, content, (err) => {
 			if (err) {
 				reject(err)
@@ -125,7 +160,6 @@ function loadTemplates() {
 				}
 			})
 			Promise.all(promises).then((results) => {
-				// console.log("done", e)
 				results.forEach(result => {
 					templatesMap.set(result[0], result[1])
 				})
@@ -140,7 +174,6 @@ function loadTemplates() {
 
 function loadTemplate(templatePath) {
 	return new Promise((resolve, reject) => {
-		// console.log(templatePath)
 		readFile(templatePath, result => {
 			resolve([templatePath, result])
 		})

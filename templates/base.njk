@@ -1,24 +1,21 @@
 {# All pages on your site should inherit from this base template #}
-<html>
-
 <html lang="en">
-<head>
-  <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8">
 
-  <title>{{ title }}</title>
-  <meta name="description" content="TODO">
-  <meta name="author" content="TODO">
+    <title>{{ title }}</title>
+    <meta name="description" content="TODO">
+    <meta name="author" content="TODO">
 
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
+    <link rel="stylesheet" href="css/styles.css?v=1.0">
 
-</head>
+  </head>
 
-<body>
-
+  <body>
+    {% include "templates/header.njk" %}
     {% block body %}
       Default content
     {% endblock %}
 
-
-</body>
+  </body>
 </html>
