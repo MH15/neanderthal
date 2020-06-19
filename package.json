@@ -2,10 +2,10 @@
   "name": "neanderthal",
   "version": "0.0.1",
   "description": "static blog machine",
-  "main": "build.js",
+  "main": "core/build.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node build.js",
+    "build": "node core/build.js",
     "serve": "cd build && static-server"
   },
   "repository": {

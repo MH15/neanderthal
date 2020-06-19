@@ -1,6 +1,7 @@
 const nunjucks = require("nunjucks")
 const marked = require("marked")
 const fs = require("fs-extra")
+const io = require("./io")
 const path = require("path")
 const frontmatter = require('front-matter')
 const { resolve } = require("path")
@@ -8,16 +9,18 @@ const { write } = require("fs")
 
 const CLEAN_BUILD = true;
 
+let nconfig = require("../nconfig")
+
 
 
 // console.log("neanderthal time")
 
 if (CLEAN_BUILD) {
 	// Delete then create the `build` directory
-	deleteDir("build")
-	makeDir("build")
+	io.deleteDir("build")
+	io.makeDir("build")
 	// Create `build/blog`
-	makeDir("build/blog")
+	io.makeDir("build/blog")
 
 }
 
@@ -34,10 +37,10 @@ async function build() {
 	blog_posts.sort(compareDatePublished)
 	// Generate the root blog page as a list of recent posts by date
 	let html = nunjucks.renderString(templatesMap.get("templates/blog.njk"), {
-		title: "Blog Posts",
-		blog_posts
+		blog_posts,
+		meta: nconfig.meta
 	})
-	writeFile(path.join("build", "blog", "index.html"), html)
+	io.writeFile(path.join("build", "blog", "index.html"), html)
 
 	// From the root `pages` directory, parse every folder as its own page, using the “page” template from `templates/page.njk`.
 	let pages = await renderPages(templatesMap)
@@ -48,18 +51,13 @@ async function build() {
 	let content = fs.readFileSync(path.join("pages", "index.njk"), "utf8")
 	console.log(content)
 	html = nunjucks.renderString(content, {
-		title: "Blog Posts", // TODO: add global site config and always pass those vars to templates
+		meta: nconfig.meta
 	})
-	writeFile(path.join("build", "index.html"), html)
+	io.writeFile(path.join("build", "index.html"), html)
 
 
 	// Copy all files from `labs` to `public/labs`. Labs are raw html5 for posting projects outside the blog structure.
-	// TODO
-
-	// Generate a directory listing for `labs`
-	// TODO
-
-
+	await fs.copy(path.join("labs"), path.join("build", "labs"))
 
 
 }
@@ -85,13 +83,13 @@ function renderPages(templatesMap) {
 			// Process all blog posts concurrently but wait until last is processed to return
 			Promise.all(folders.map(async folder => {
 				let folderPath = path.join("pages", folder)
-				if (isDir(folderPath)) {
+				if (io.isDir(folderPath)) {
 					let postPath = path.join("build", folder)
-					makeDir(postPath)
+					io.makeDir(postPath)
 					let indexPath = path.join(folderPath, "index.njk")
 					let page = await renderNunjucksPage(indexPath, templatesMap, folder)
 					let buildPath = path.join(postPath, "index.html")
-					await writeFile(buildPath, page.html)
+					await io.writeFile(buildPath, page.html)
 					// TODO: typescript this
 					return page
 				}
@@ -115,13 +113,13 @@ function renderBlogPosts(templatesMap) {
 			// Process all blog posts concurrently but wait until last is processed to return
 			Promise.all(folders.map(async folder => {
 				let folderPath = path.join("posts", folder)
-				if (isDir(folderPath)) {
+				if (io.isDir(folderPath)) {
 					let postPath = path.join("build", "blog", folder)
-					makeDir(postPath)
+					io.makeDir(postPath)
 					let indexPath = path.join(folderPath, "index.md")
 					let page = await renderMarkdownPage(indexPath, templatesMap, folder)
 					let buildPath = path.join(postPath, "index.html")
-					await writeFile(buildPath, page.html)
+					await io.writeFile(buildPath, page.html)
 					// TODO: typescript this
 					return page
 				}
@@ -137,12 +135,9 @@ function renderBlogPosts(templatesMap) {
 }
 
 
-
-
-
 function renderMarkdownPage(filepath, templatesMap, folder) {
 	return new Promise((resolve, reject) => {
-		readFile(filepath, (result) => {
+		io.readFile(filepath, (result) => {
 			let content = frontmatter(result)
 
 			let attributes = content.attributes
@@ -153,7 +148,8 @@ function renderMarkdownPage(filepath, templatesMap, folder) {
 				markdown: markdown,
 				title: attributes.title || null,
 				authors: attributes.authors || [],
-				attributes: attributes
+				attributes: attributes,
+				meta: nconfig.meta
 			})
 
 			// TODO: typescript this
@@ -170,10 +166,11 @@ function renderMarkdownPage(filepath, templatesMap, folder) {
 
 function renderNunjucksPage(filepath, templatesMap, folder) {
 	return new Promise((resolve, reject) => {
-		readFile(filepath, (result) => {
+		io.readFile(filepath, (result) => {
 			let template = templatesMap.get("templates/page.njk")
 			let html = nunjucks.renderString(template, {
 				page: result,
+				meta: nconfig.meta
 			})
 			// TODO: typescript this
 			let page = {
@@ -186,46 +183,6 @@ function renderNunjucksPage(filepath, templatesMap, folder) {
 		})
 	})
 }
-
-
-function readFile(filepath, callback) {
-	fs.readFile(filepath, "utf8", (err, result) => {
-		if (err) {
-			console.error(err)
-			throw new Error(err)
-		}
-		callback(result)
-	})
-}
-
-function isDir(dir) {
-	return fs.lstatSync(dir).isDirectory()
-}
-
-function makeDir(dir) {
-	if (!fs.existsSync(dir)) {
-		fs.mkdirSync(dir);
-	}
-}
-
-function deleteDir(dir) {
-	fs.removeSync(dir)
-}
-
-function writeFile(filepath, content) {
-	return new Promise((resolve, reject) => {
-		let dir = path.parse(filepath).dir
-		makeDir(dir)
-		fs.writeFile(filepath, content, (err) => {
-			if (err) {
-				reject(err)
-			}
-			resolve()
-		})
-	})
-
-}
-
 
 function loadTemplates() {
 	return new Promise((resolve, reject) => {
@@ -251,10 +208,9 @@ function loadTemplates() {
 	})
 }
 
-
 function loadTemplate(templatePath) {
 	return new Promise((resolve, reject) => {
-		readFile(templatePath, result => {
+		io.readFile(templatePath, result => {
 			resolve([templatePath, result])
 		})
 	})
