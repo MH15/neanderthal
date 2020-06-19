@@ -42,8 +42,16 @@ async function build() {
 	// From the root `pages` directory, parse every folder as its own page, using the “page” template from `templates/page.njk`.
 	let pages = await renderPages(templatesMap)
 
-	// Copy `pages/index.html` from the pages directory to `public/index.html`. This is the homepage of the app.
-	// TODO
+	// Render `pages/index.njk` from the pages directory to `build/index.html`.
+	// This is the homepage of the app.
+	let indexPath = path.join("pages", "index.njk")
+	let content = fs.readFileSync(path.join("pages", "index.njk"), "utf8")
+	console.log(content)
+	html = nunjucks.renderString(content, {
+		title: "Blog Posts", // TODO: add global site config and always pass those vars to templates
+	})
+	writeFile(path.join("build", "index.html"), html)
+
 
 	// Copy all files from `labs` to `public/labs`. Labs are raw html5 for posting projects outside the blog structure.
 	// TODO
@@ -82,7 +90,6 @@ function renderPages(templatesMap) {
 					makeDir(postPath)
 					let indexPath = path.join(folderPath, "index.njk")
 					let page = await renderNunjucksPage(indexPath, templatesMap, folder)
-					console.log(page)
 					let buildPath = path.join(postPath, "index.html")
 					await writeFile(buildPath, page.html)
 					// TODO: typescript this
@@ -164,9 +171,7 @@ function renderMarkdownPage(filepath, templatesMap, folder) {
 function renderNunjucksPage(filepath, templatesMap, folder) {
 	return new Promise((resolve, reject) => {
 		readFile(filepath, (result) => {
-			console.log("RESULT", result)
 			let template = templatesMap.get("templates/page.njk")
-			console.log(template)
 			let html = nunjucks.renderString(template, {
 				page: result,
 			})
@@ -194,7 +199,7 @@ function readFile(filepath, callback) {
 }
 
 function isDir(dir) {
-	return fs.existsSync(dir)
+	return fs.lstatSync(dir).isDirectory()
 }
 
 function makeDir(dir) {
