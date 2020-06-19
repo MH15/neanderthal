@@ -40,7 +40,7 @@ async function build() {
 	writeFile(path.join("build", "blog", "index.html"), html)
 
 	// From the root `pages` directory, parse every folder as its own page, using the “page” template from `templates/page.njk`.
-	// TODO
+	let pages = await renderPages(templatesMap)
 
 	// Copy `pages/index.html` from the pages directory to `public/index.html`. This is the homepage of the app.
 	// TODO
@@ -68,16 +68,44 @@ function compareDatePublished(a, b) {
 
 
 
-function renderBlogPosts(templatesMap) {
+function renderPages(templatesMap) {
 	return new Promise((resolve, reject) => {
-		fs.readdir("posts", (err, folders) => {
-			let blog_posts = []
+		fs.readdir("pages", (err, folders) => {
 			if (err) {
 				reject(err)
 			}
+			// Process all blog posts concurrently but wait until last is processed to return
+			Promise.all(folders.map(async folder => {
+				let folderPath = path.join("pages", folder)
+				if (isDir(folderPath)) {
+					let postPath = path.join("build", folder)
+					makeDir(postPath)
+					let indexPath = path.join(folderPath, "index.njk")
+					let page = await renderNunjucksPage(indexPath, templatesMap, folder)
+					console.log(page)
+					let buildPath = path.join(postPath, "index.html")
+					await writeFile(buildPath, page.html)
+					// TODO: typescript this
+					return page
+				}
+			})).then(pages => {
+				resolve(pages)
+			}).catch(err => {
+				console.error(err)
+				reject(err)
+			})
 
-			// Process all blog posts concurrently but wait until last is
-			// processed to return
+		})
+	})
+}
+
+function renderBlogPosts(templatesMap) {
+	return new Promise((resolve, reject) => {
+		fs.readdir("posts", (err, folders) => {
+			if (err) {
+				reject(err)
+			}
+			// Process all blog posts concurrently but wait until last is processed to return
 			Promise.all(folders.map(async folder => {
 				let folderPath = path.join("posts", folder)
 				if (isDir(folderPath)) {
@@ -91,7 +119,6 @@ function renderBlogPosts(templatesMap) {
 					return page
 				}
 			})).then(blog_posts => {
-				console.log("LENGTH ", blog_posts.length)
 				resolve(blog_posts)
 			}).catch(err => {
 				console.error(err)
@@ -128,6 +155,27 @@ function renderMarkdownPage(filepath, templatesMap, folder) {
 				html: html,
 				slug: "blog/" + folder,
 				date_published: attributes.date_published
+			}
+			resolve(page)
+		})
+	})
+}
+
+function renderNunjucksPage(filepath, templatesMap, folder) {
+	return new Promise((resolve, reject) => {
+		readFile(filepath, (result) => {
+			console.log("RESULT", result)
+			let template = templatesMap.get("templates/page.njk")
+			console.log(template)
+			let html = nunjucks.renderString(template, {
+				page: result,
+			})
+			// TODO: typescript this
+			let page = {
+				// title: attributes.title,
+				html: html,
+				slug: "/" + folder,
+				// date_publ/ished: attributes.date_published
 			}
 			resolve(page)
 		})
