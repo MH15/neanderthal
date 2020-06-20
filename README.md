@@ -2,6 +2,8 @@
 
 A static hypertext generator for your blog or website. 
 
+[![Join the chat at https://gitter.im/neanderthal-static-sites/community](https://badges.gitter.im/neanderthal-static-sites/community.svg)](https://gitter.im/neanderthal-static-sites/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## Overview.
 
 Neanderthal transpiles structured Markdown and Nunjucks content to a static
@@ -80,24 +82,6 @@ TODO
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-[![Join the chat at https://gitter.im/neanderthal-static-sites/community](https://badges.gitter.im/neanderthal-static-sites/community.svg)](https://gitter.im/neanderthal-static-sites/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Run `npm build` to trigger the build script.
 
