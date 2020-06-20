@@ -19,3 +19,8 @@ The build script does the following:
     6. Write rendered html to `build/{page-name}/index.html`
 5. Copy all files from `labs` to `build/labs`. Labs are raw html5 for posting projects outside the blog structure.
 6. Copy `pages/index.html` from the pages directory to `build/index.html`. This is the homepage of the app.
+
+
+## Credits
+- [new.css](https://newcss.net/) - new.css is a classless CSS framework to write modern websites using only HTML.
+- 

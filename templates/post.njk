@@ -6,11 +6,12 @@
         By 
         {# Loop through all authors #}
         {% set comma = joiner(", ") %}
-        {% for author in attributes.authors -%}
-            {{ comma() }}{{ author -}}
-        {% else %}
+        {%- for author in authors -%}
+            {{- comma() -}}
+            <a href="/author/{{ author.username }}">{{- author.name -}}</a>
+        {%- else -%}
             No author.
-        {% endfor %}
+        {%- endfor -%}
     </p>
     <p>
         Tagged:

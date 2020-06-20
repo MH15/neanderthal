@@ -12,5 +12,17 @@ module.exports = {
     },
     config: {
 
+    },
+    authors: {
+        "peter-hall": {
+            name: "Peter Hall",
+            short_bio: "short bio catchphrase",
+            bio: "a whole fucking paragraph."
+        },
+        "deklin-caban": {
+            name: "Deklin Caban",
+            short_bio: "and I yeet.",
+            bio: "a whole fucking paragraph."
+        }
     }
 }

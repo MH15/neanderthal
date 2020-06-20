@@ -1,0 +1,7 @@
+{% extends "templates/base.njk" %}
+
+{% block body %}
+    <h1>{{author.name}}</h1>
+    <h5>{{author.short_bio}}</h5>
+    <p>{{author.bio | safe}}</p>
+{% endblock %}

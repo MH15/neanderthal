@@ -2,8 +2,8 @@
 title: Hello, World!
 date_published: 2020-6-18
 authors:
-    - Peter Hall
-    - Deklin Caban
+    - peter-hall
+    - deklin-caban
 tags:
     - meta
     - tag2
