@@ -8,6 +8,7 @@ const frontmatter = require('front-matter')
 const CLEAN_BUILD = true;
 
 let nconfig = require("../nconfig")
+const vars = require("./vars")
 
 
 
@@ -33,10 +34,36 @@ async function build() {
 
 	// for every blog post, add it to Map<string, Array<blog_post>> where key is
 	// the tag and value is an array of posts with that tag.
-	// TODO
+	let tagsMap = new Map(); // Map<string, Array<blog_post>()
+	blog_posts.forEach(blog_post => {
+		let tags = blog_post.tags
+		for (let tag of tags) {
+			if (tagsMap.has(tag)) {
+				let posts = tagsMap.get(tag)
+				posts.push(blog_post)
+				tagsMap.set(tag, posts)
+			} else {
+				tagsMap.set(tag, [blog_post])
+			}
+		}
+	})
 
 	// Create pages for every tag mentioned in a post
-	// TODO
+	io.makeDir("build/tags")
+	let tags = Array.from(tagsMap.keys())
+	for (let tag of tags) {
+		let html = nunjucks.renderString(templatesMap.get("templates/tag.njk"), {
+			tag,
+			blog_posts: tagsMap.get(tag),
+			meta: nconfig.meta,
+			title: `"${tag}" tag`
+		})
+		console.log(tag, ":", tagsMap.get(tag).length)
+		io.writeFile(path.join(vars.BUILD, vars.TAGS, tag, "index.html"), html)
+	}
+
+	// Create base tags page
+
 
 	// Sort posts by most recent
 	blog_posts.sort(compareDatePublished)
@@ -175,7 +202,6 @@ function renderMarkdownPage(filepath, templatesMap, folder) {
 					name: nconfig.authors[author].name || "No Author"
 				})
 			});
-			console.log(authors)
 
 			let markdown = marked(content.body)
 			let template = templatesMap.get("templates/post.njk")
@@ -194,6 +220,7 @@ function renderMarkdownPage(filepath, templatesMap, folder) {
 				slug: "blog/" + folder,
 				date_published: attributes.date_published,
 				authors: authors || [],
+				tags: attributes.tags
 			}
 			resolve(page)
 		})

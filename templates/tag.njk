@@ -1,0 +1,17 @@
+{% extends "templates/base.njk" %}
+
+{% block body %}
+    <h1>
+        {{blog_posts | length }} posts tagged with '{{tag}}'
+    </h1>
+    <ul>
+        {% for post in blog_posts %}
+            <li>
+                <a href="/{{ post.slug }}">{{ post.title }}</a>
+                Posted {{post.date_published}}
+            </li>
+        {% else %}
+            No blog posts tagged with <code>{{tag}}</code>.
+        {% endfor %}
+    </ul>
+{% endblock %}

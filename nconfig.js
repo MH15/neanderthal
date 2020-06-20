@@ -5,14 +5,13 @@
  *
  */
 module.exports = {
+    // The `meta` object is sent to every template.
     meta: {
         title: "Site Title",
         description: "This blog is statically awesome!",
         author: "Matt Hall",
     },
-    config: {
-
-    },
+    // All authors must be defined here.
     authors: {
         "peter-hall": {
             name: "Peter Hall",
@@ -24,5 +23,8 @@ module.exports = {
             short_bio: "and I yeet.",
             bio: "a whole fucking paragraph."
         }
-    }
+    },
+    config: {
+
+    },
 }

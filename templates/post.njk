@@ -19,7 +19,7 @@
         {% set space = joiner(" ") %}
         {% for tag in attributes.tags -%}
             {{ space() }}
-            <a href="">{{ tag -}}</a>
+            <a href="/tags/{{ tag }}">{{ tag -}}</a>
         {% else %}
             No tags.
         {% endfor %}
