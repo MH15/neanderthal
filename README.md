@@ -22,6 +22,7 @@ templates as needed.
 ### Roadmap
 These features should be added in an upcoming release
 - Support for nested custom pages
+- CLI tool to make new pages and blog posts from a template.
 - More configuration options
 
 ## Getting Started
@@ -34,6 +35,15 @@ These features should be added in an upcoming release
 
 # Documentation
 The docs for neanderthal should always fit in this Github Readme.
+
+## Making a blog post
+1. Open the `posts/` directory in your neanderthal project. 
+2. Create a new folder
+with the URL for your post, e.g. "learning-git". 
+3. Add an `index.md` file with the
+content from [posts/template/index.md](/posts/template/index.md).
+4. Edit the frontmatter (the stuff between the dashed lines) to customize
+   metadata for your post, then edit the markdown body.
 
 ## Configuration ([`nconfig.js`](/nconfig.js))
 Often the first file to edit, the more information you can store in here the

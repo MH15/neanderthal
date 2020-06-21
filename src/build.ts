@@ -1,11 +1,13 @@
+import { BlogPost, Author, Page } from "./Types"
+
 const nunjucks = require("nunjucks")
 const marked = require("marked")
-const fs = require("fs-extra")
+import * as fs from "fs-extra"
 const io = require("./io")
 const path = require("path")
 const frontmatter = require('front-matter')
 
-const CLEAN_BUILD = true;
+const CLEAN_BUILD = true
 
 let nconfig = require("../nconfig")
 const vars = require("./vars")
@@ -34,7 +36,7 @@ async function build() {
 
 	// for every blog post, add it to Map<string, Array<blog_post>> where key is
 	// the tag and value is an array of posts with that tag.
-	let tagsMap = new Map(); // Map<string, Array<blog_post>()
+	let tagsMap = new Map() // Map<string, Array<blog_post>()
 	blog_posts.forEach(blog_post => {
 		let tags = blog_post.tags
 		for (let tag of tags) {
@@ -58,12 +60,11 @@ async function build() {
 			meta: nconfig.meta,
 			title: `"${tag}" tag`
 		})
-		console.log(tag, ":", tagsMap.get(tag).length)
 		io.writeFile(path.join(vars.BUILD, vars.TAGS, tag, "index.html"), html)
 	}
 
 	// Create base tags page
-
+	// TODO
 
 	// Sort posts by most recent
 	blog_posts.sort(compareDatePublished)
@@ -85,7 +86,7 @@ async function build() {
 			title: author.name
 		})
 		await io.writeFile(path.join("build", "author", username, "index.html"), html)
-	});
+	})
 
 	// From the root `pages` directory, parse every folder as its own page, using the “page” template from `templates/page.njk`.
 	let pages = await renderPages(templatesMap)
@@ -111,14 +112,15 @@ async function build() {
 	// posting projects outside the blog structure.
 	await fs.copy(path.join("labs"), path.join("build", "labs"))
 
-
+	console.log(io.ioStats)
 }
 
 
-build()
+export default build()
 
 
-function compareDatePublished(a, b) {
+
+function compareDatePublished(a: BlogPost, b: BlogPost) {
 	let dateA = new Date(a.date_published)
 	let dateB = new Date(b.date_published)
 	return dateB.getTime() - dateA.getTime()
@@ -156,7 +158,7 @@ function renderPages(templatesMap) {
 	})
 }
 
-function renderBlogPosts(templatesMap) {
+function renderBlogPosts(templatesMap: Map<string, string>): Promise<BlogPost[]> {
 	return new Promise((resolve, reject) => {
 		fs.readdir("posts", (err, folders) => {
 			if (err) {
@@ -187,7 +189,7 @@ function renderBlogPosts(templatesMap) {
 }
 
 
-function renderMarkdownPage(filepath, templatesMap, folder) {
+function renderMarkdownPage(filepath: string, templatesMap: Map<string, string>, folder: string): Promise<BlogPost> {
 	return new Promise((resolve, reject) => {
 		io.readFile(filepath, (result) => {
 			let content = frontmatter(result)
@@ -201,7 +203,7 @@ function renderMarkdownPage(filepath, templatesMap, folder) {
 					username: author,
 					name: nconfig.authors[author].name || "No Author"
 				})
-			});
+			})
 
 			let markdown = marked(content.body)
 			let template = templatesMap.get("templates/post.njk")
@@ -214,7 +216,7 @@ function renderMarkdownPage(filepath, templatesMap, folder) {
 			})
 
 			// TODO: typescript this
-			let page = {
+			let page: BlogPost = {
 				title: attributes.title,
 				html: html,
 				slug: "blog/" + folder,
@@ -227,7 +229,7 @@ function renderMarkdownPage(filepath, templatesMap, folder) {
 	})
 }
 
-function renderNunjucksPage(filepath, templatesMap, folder) {
+function renderNunjucksPage(filepath, templatesMap, folder): Promise<Page> {
 	return new Promise((resolve, reject) => {
 		io.readFile(filepath, (result) => {
 			let template = templatesMap.get("templates/page.njk")
@@ -236,18 +238,18 @@ function renderNunjucksPage(filepath, templatesMap, folder) {
 				meta: nconfig.meta
 			})
 			// TODO: typescript this
-			let page = {
+			let page: Page = {
 				// title: attributes.title,
 				html: html,
 				slug: "/" + folder,
-				// date_publ/ished: attributes.date_published
 			}
 			resolve(page)
 		})
 	})
 }
 
-function loadTemplates() {
+
+function loadTemplates(): Promise<Map<string, string>> {
 	return new Promise((resolve, reject) => {
 		// Load all templates
 		let templatesMap = new Map()

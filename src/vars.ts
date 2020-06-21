@@ -1,7 +1,7 @@
 /**
  * Constants
  */
-module.exports = {
+export default {
     BUILD: "build",
     BLOG: "blog",
     TAGS: "tags",

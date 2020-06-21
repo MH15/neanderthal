@@ -1,41 +1,48 @@
 
-const fs = require("fs-extra")
-const path = require("path")
+import * as path from "path"
+import * as fs from "fs-extra"
 
-exports.isDir = function (dir) {
+export const ioStats = {
+    writes: 0,
+    reads: 0
+}
+
+export function isDir(dir) {
     return fs.lstatSync(dir).isDirectory()
 }
 
-exports.makeDir = function (dir) {
+export function makeDir(dir) {
     if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir);
+        fs.mkdirSync(dir)
     }
 }
 
-exports.deleteDir = function (dir) {
+export function deleteDir(dir) {
     fs.removeSync(dir)
 }
 
-exports.writeFile = function (filepath, content) {
+export function writeFile(filepath, content) {
     return new Promise((resolve, reject) => {
         let dir = path.parse(filepath).dir
-        exports.makeDir(dir)
+        makeDir(dir)
         fs.writeFile(filepath, content, (err) => {
             if (err) {
                 reject(err)
             }
             resolve()
+            ioStats.writes++
         })
     })
 
 }
 
-exports.readFile = function (filepath, callback) {
+export function readFile(filepath, callback) {
     fs.readFile(filepath, "utf8", (err, result) => {
         if (err) {
             console.error(err)
-            throw new Error(err)
+            throw err
         }
         callback(result)
+        ioStats.reads++
     })
 }
