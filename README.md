@@ -12,18 +12,13 @@ posts in Markdown with front matter metadata, then customize the Nunjucks
 templates as needed.
 
 ### Features
+
 - Blog posts with support for multiple authors.
 - A full tagging system.
 - Author profile pages.
 - Custom pages.
 - Full support of the CommonMark Markdown spec, thanks to [marked](https://marked.js.org).
 - The power of [Nunjucks](https://mozilla.github.io/nunjucks/) templates.
-
-### Roadmap
-These features should be added in an upcoming release
-- Support for nested custom pages
-- CLI tool to make new pages and blog posts from a template.
-- More configuration options
 
 ## Getting Started
 The best-practice way to use Neanderthal is with
