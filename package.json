@@ -24,6 +24,7 @@
     "fs-extra": "^8.1.0",
     "marked": "^1.1.0",
     "mustache": "^4.0.1",
+    "node-watch": "^0.6.4",
     "nunjucks": "^3.2.1",
     "static-server": "^2.2.1",
     "terminal-link": "^2.1.1",

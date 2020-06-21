@@ -3,6 +3,8 @@ import * as yesno from 'yesno'
 import { writeFile, readFile } from "./io"
 import { join } from "path"
 import * as terminalLink from "terminal-link"
+import { existsSync } from "fs-extra"
+import { RenderTypes } from "./Types"
 /**
  * Calling `npx neanderthal` should build your directory, operating in the following steps.
  * 1. Check for an nconfig.json. If that file does not exist:
@@ -20,25 +22,41 @@ export default class CommandLine {
     args: string[]
     cwd: string
     showMessage: boolean
-    constructor(showMessage, buildCallback) {
+    constructor(showMessage, buildCallback, serveCallback) {
         this.args = process.argv.slice(2)
         this.cwd = process.cwd()
         this.showMessage = showMessage
 
-        if (this.args.length > 0) {
-            switch (this.args[0]) {
-                case '-s':
-                case '--serve':
-                    break
-                case '-h':
-                case '--help':
-                    this.showHelp()
-                    break
 
+
+        // Check if a config file exists, if not show onboarding
+        if (existsSync(join(this.cwd, "nconfig.js"))) {
+            let nconfig = require(join(this.cwd, "nconfig.js"))
+            // Do normal build or check parameters
+            if (this.args.length > 0) {
+                switch (this.args[0]) {
+                    case '-s':
+                    case '--serve':
+                        serveCallback()
+                        break
+                    case '-h':
+                    case '--help':
+                        this.showHelp()
+                        break
+                    case '-v':
+                    case '--version':
+                        this.showVersion()
+                        break
+
+                }
+            } else {
+                buildCallback()
             }
         } else {
-            buildCallback()
+            this.showOnboarding()
         }
+
+
     }
 
     async showOnboarding() {
@@ -83,11 +101,28 @@ export default class CommandLine {
 
     }
 
+    showVersion() {
+        let version = require(join(__dirname, "..", "package.json")).version
+        console.log(version)
+    }
+
+    log(source: string, destination: string, type: RenderTypes) {
+        switch (type) {
+            case RenderTypes.Copy:
+                console.log(`${c.bold.green("Copied")} ${source} to ${destination}.`)
+                break
+            case RenderTypes.Render:
+                console.log(`${c.bold.cyan("Rendered")} ${source} to ${destination}.`)
+                break
+        }
+    }
+
     exit() {
         if (this.showMessage) {
             console.log(c.magenta("Message from creator"))
         }
     }
+
 }
 
 

@@ -15,3 +15,10 @@ export interface Page {
 export interface Author {
 
 }
+
+
+export enum RenderTypes {
+    Copy = 1,
+    Render = 2,
+
+}
