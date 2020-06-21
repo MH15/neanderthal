@@ -26,12 +26,14 @@ These features should be added in an upcoming release
 - More configuration options
 
 ## Getting Started
+The best-practice way to use Neanderthal is with
+[npx](https://blog.npmjs.org/post/162869356040/introducing-npx-an-npm-package-runner).
+This will ensure you always use the current stable release. Running the below
+command will cache the current version of Neanderthal and set up a new project.
+```bash
+npx neanderthal
+```
 
-* [Install](https://jekyllrb.com/docs/installation/) the gem
-* Read up about its [Usage](https://jekyllrb.com/docs/usage/) and [Configuration](https://jekyllrb.com/docs/configuration/)
-* Take a gander at some existing [Sites](https://github.com/jekyll/jekyll/wiki/sites)
-* [Fork](https://github.com/jekyll/jekyll/fork) and [Contribute](https://jekyllrb.com/docs/contributing/) your own modifications
-* Have questions? Check out our official forum community [Jekyll Talk](https://talk.jekyllrb.com/) or [`#jekyll` on irc.freenode.net](https://botbot.me/freenode/jekyll/)
 
 # Documentation
 The docs for neanderthal should always fit in this Github Readme.
@@ -78,42 +80,41 @@ info.
 
 # Addendum
 
-## Finding Help
+## Help
 
 If our [docs](#documentation) don't suffice, check
 the [troubleshooting](#troubleshooting) section or ask for help on our
 [Gitter](https://gitter.im/neanderthal-static-sites/community). If you find a
 verifiable bug, please file an issue.
 
+
+## Contributing
+We are looking for your help to make Neanderthal better!
+There is a general [Roadmap](https://github.com/mh15/neanderthal/Roadmap.md) for
+project, but feel free to open issues with new feature proposals.
+
 ## Code of Conduct
 TODO
 
 
 
-
-
-
-Run `npm build` to trigger the build script.
-
-The build script does the following:
-1. Delete then create the `build` directory.
-2. Create `build/blog`.
-3. From the root `blog` directory, parse every folder as its own post, using the “post” template from `templates/post.html`.
-    1. Create a new directory as `build/blog/{post-name}`
-    2. Copy all static assets (images, etc) into the directory.
-    3. Render markdown and hydrate the template.
-    4. Write rendered html to `build/blog/{post-name}/index.html`
-4. From the root `pages` directory, parse every folder as its own page, using the “page” template from `templates/page.html`.
-    1. Check to make sure the page name does not conflict with “blog”
-    2. Create a new directory as `build/{page-name}`
-    3. Copy all static assets (images, etc) into the directory.
-    4. If the index at `pages/{page-name}` is a markdown file, render markdown then hydrate the template.
-    5. If the index at `pages/{page-name}` is an html file, just hydrate the template.
-    6. Write rendered html to `build/{page-name}/index.html`
-5. Copy all files from `labs` to `build/labs`. Labs are raw html5 for posting projects outside the blog structure.
-6. Copy `pages/index.html` from the pages directory to `build/index.html`. This is the homepage of the app.
-
-
 ## Credits
+This project would not exist without the following fantastic libraries:
 - [new.css](https://newcss.net/) - new.css is a classless CSS framework to write modern websites using only HTML.
-- 
+- [ansi-colors](https://www.npmjs.com/package/ansi-colors) - the fastest Node.js
+  library for terminal styling
+- [front-matter](https://www.npmjs.com/package/front-matter) - extract meta data
+  (front-matter) from documents.
+- [fs-extra](https://www.npmjs.com/package/fs-extra) - adds file system methods
+  that aren't included in the native `fs` module
+- [nunjucks](https://www.npmjs.com/package/nunjucks) - fully featured templating
+  engine for javascript, inspired by
+  [jinja2](https://jinja.palletsprojects.com/en/2.11.x/)
+- [static-server](https://www.npmjs.com/package/static-server) - a simple http
+  server to serve static resource files from a local directory
+- [terminal-link](https://www.npmjs.com/package/terminal-link) - create
+  clickable links in the terminal
+- [yesno](https://www.npmjs.com/package/yesno) - a nodejs library for issuing
+  and handling responses to yes/no questions
+- [typescript](https://www.typescriptlang.org/) - a superset of JavaScript, adds
+  optional types to JavaScript
