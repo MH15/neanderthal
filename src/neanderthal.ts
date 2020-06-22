@@ -1,27 +1,31 @@
-import CommandLine from "./CommandLine"
-import { join, relative } from "path"
 import watch from "node-watch"
-import { RenderTypes } from "./Types"
+import { join, relative } from "path"
+import CommandLine from "./CommandLine"
+import { RenderTypes } from "./helpers/types"
+import Builder from "./Builder"
 var StaticServer = require('static-server')
 
 
 // Parse command line args
-let cli = new CommandLine(false, build, serve)
+let root = new CommandLine(false, build, serve)
 
 
 
 // Build
 
-function build() {
-    console.log("build")
+async function build(cli) {
+    // console.log("build", cli)
     // TODO: trigger full build
+    let builder = new Builder(cli.nconfig)
+    await builder.setup()
+    await builder.build()
 
 
 }
-function serve() {
+function serve(cli) {
     console.log("serve")
     // Trigger full initial build
-    build()
+    build(cli)
 
 
 

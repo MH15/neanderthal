@@ -1,8 +1,8 @@
-import { BlogPost, Author, Page } from "./Types"
+import * as fs from "fs-extra"
+import { BlogPost, Page } from "./helpers/types"
 
 const nunjucks = require("nunjucks")
 const marked = require("marked")
-import * as fs from "fs-extra"
 const io = require("./io")
 const path = require("path")
 const frontmatter = require('front-matter')
@@ -106,7 +106,6 @@ async function build() {
 	fs.copy(path.join("public"), path.join("build", "public")).catch(err => {
 		console.error(err)
 	})
-
 
 	// Copy all files from `labs` to `build/labs`. Labs are raw html5 for 
 	// posting projects outside the blog structure.

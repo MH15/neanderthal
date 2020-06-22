@@ -1,10 +1,10 @@
 import * as c from "ansi-colors"
-import * as yesno from 'yesno'
-import { writeFile, readFile } from "./io"
+import { existsSync } from "fs-extra"
 import { join } from "path"
 import * as terminalLink from "terminal-link"
-import { existsSync } from "fs-extra"
-import { RenderTypes } from "./Types"
+import * as yesno from 'yesno'
+import { readFile, writeFile } from "./helpers/io"
+import { RenderTypes } from "./helpers/types"
 /**
  * Calling `npx neanderthal` should build your directory, operating in the following steps.
  * 1. Check for an nconfig.json. If that file does not exist:
@@ -22,6 +22,7 @@ export default class CommandLine {
     args: string[]
     cwd: string
     showMessage: boolean
+    nconfig
     constructor(showMessage, buildCallback, serveCallback) {
         this.args = process.argv.slice(2)
         this.cwd = process.cwd()
@@ -31,13 +32,13 @@ export default class CommandLine {
 
         // Check if a config file exists, if not show onboarding
         if (existsSync(join(this.cwd, "nconfig.js"))) {
-            let nconfig = require(join(this.cwd, "nconfig.js"))
+            this.nconfig = require(join(this.cwd, "nconfig.js"))
             // Do normal build or check parameters
             if (this.args.length > 0) {
                 switch (this.args[0]) {
                     case '-s':
                     case '--serve':
-                        serveCallback()
+                        serveCallback(this)
                         break
                     case '-h':
                     case '--help':
@@ -50,7 +51,7 @@ export default class CommandLine {
 
                 }
             } else {
-                buildCallback()
+                buildCallback(this)
             }
         } else {
             this.showOnboarding()

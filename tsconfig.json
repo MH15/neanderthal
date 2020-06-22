@@ -1,7 +1,10 @@
 {
     "compilerOptions": {
         "outDir": "build",
-        "sourceMap": true
+        "sourceMap": true,
+        "downlevelIteration": true,
+        // "target": "ES5",
+        // "moduleResolution": "node"
     },
     "include": [
         "src/**/*"

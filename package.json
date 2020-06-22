@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "cd build && static-server",
-    "build": "tsc"
+    "build": "tsc",
+    "hmm": "node -r source-map-support/register cli.js"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,7 @@
   "devDependencies": {
     "@types/fs-extra": "^9.0.1",
     "@types/node": "^14.0.13",
+    "source-map-support": "^0.5.19",
     "typescript": "^3.9.5"
   }
 }
