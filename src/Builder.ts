@@ -30,19 +30,16 @@ export default class Builder {
         this.authors = this.nconfig.authors // this won't autoreload, think about this more
     }
 
-
-    async build() {
+    clean() {
         // Delete then create the `build` directory
         deleteDir("build")
         makeDir("build")
-        // Create `build/blog`
-        makeDir("build/blog")
-        // The Map of BlogPosts is used by a lot of things so we'll await that
-        this.posts = await this.loadBlogPosts()
 
-        // No need to wait for the completion of this write
-        this.posts.forEach((post, name, map) => {
-            let postPath = join("build", "blog", name)
+    }
+
+    renderBlogPosts() {
+        this.posts.forEach((post, key, map) => {
+            let postPath = join("build", "blog", post.name)
             makeDir(postPath)
             let buildPath = join(postPath, "index.html")
             post.render({
@@ -50,46 +47,49 @@ export default class Builder {
             })
             post.write(buildPath)
         })
+    }
 
-        // for every blog post, add it to a map where the key is
-        // the tag and the value is an array of posts with that tag.
-        this.tags = new Map<string, BlogPost[]>()
-        this.posts.forEach(post => {
-            let tags = post.attributes.tags
-            for (let tag of tags) {
-                if (this.tags.has(tag)) {
-                    let posts = this.tags.get(tag)
-                    posts.push(post)
-                    this.tags.set(tag, posts)
-                } else {
-                    this.tags.set(tag, [post])
-                }
-            }
+    async loadAndRenderOneBlogPost(post: BlogPost): Promise<string> {
+        await post.load()
+        let postBuildDir = join(this.dirBuild, "blog", post.name)
+        makeDir(postBuildDir)
+        let postBuildFile = join(postBuildDir, "index.html")
+        post.render({
+            meta: this.nconfig.meta
         })
+        await post.write(postBuildFile)
+        // console.log(result)
+        return postBuildFile
+    }
 
-        // Create pages for every tag mentioned in a post
-        makeDir("build/tags")
-        let tags = Array.from(this.tags.keys())
-        for (let tag of tags) {
-            let html = this.templates.get("templates/tag.njk").render({
-                tag,
-                blog_posts: this.tags.get(tag),
-                meta: this.nconfig.meta,
-                title: `"${tag}" tag`
-            })
-            writeFile(join(this.dirBuild, vars.TAGS, tag, "index.html"), html)
-        }
-
-        // Sort posts by most recent
-        let orderedPosts = Object.values(this.posts)
+    async renderBlogIndex() {
+        let orderedPosts = Array.from(this.posts.values())
         orderedPosts.sort(compareDatePublished)
         // Generate the root blog page as a list of recent posts by date
         let html = this.templates.get("templates/blog.njk").render({
-            orderedPosts,
+            blog_posts: orderedPosts,
             meta: this.nconfig.meta,
             title: "Blog"
         })
-        writeFile(join("build", "blog", "index.html"), html)
+        writeFile(join(this.dirBuild, vars.BLOG, "index.html"), html)
+    }
+
+    async build() {
+        this.clean()
+        // Create `build/blog`
+        makeDir("build/blog")
+        // The Map of BlogPosts is used by a lot of things so we'll await that
+        this.posts = await this.loadBlogPosts()
+
+        // No need to wait for the completion of this write
+        this.renderBlogPosts()
+
+        // for every blog post, add it to a map where the key is
+        // the tag and the value is an array of posts with that tag.
+        this.renderTagsPage()
+
+        // Sort posts by most recent
+        this.renderBlogIndex()
 
         // Create pages for each author defined in `nconfig.js` using the "author" template
         makeDir("build/author")
@@ -119,7 +119,7 @@ export default class Builder {
         // This is the homepage of the app.
         let indexPath = join(this.dirPages, "index.njk")
         let content = readFileSync(join(this.dirPages, "index.njk"), "utf8")
-        html = nunjucks.renderString(content, {
+        let html = nunjucks.renderString(content, {
             meta: this.nconfig.meta,
             title: "Home"
         })
@@ -136,6 +136,34 @@ export default class Builder {
         await copy(join("labs"), join("build", "labs"))
 
 
+    }
+    renderTagsPage() {
+        this.tags = new Map<string, BlogPost[]>()
+        this.posts.forEach(post => {
+            let tags = post.attributes.tags
+            for (let tag of tags) {
+                if (this.tags.has(tag)) {
+                    let posts = this.tags.get(tag)
+                    posts.push(post)
+                    this.tags.set(tag, posts)
+                } else {
+                    this.tags.set(tag, [post])
+                }
+            }
+        })
+
+        // Create pages for every tag mentioned in a post
+        makeDir("build/tags")
+        let tags = Array.from(this.tags.keys())
+        for (let tag of tags) {
+            let html = this.templates.get("templates/tag.njk").render({
+                tag,
+                blog_posts: this.tags.get(tag),
+                meta: this.nconfig.meta,
+                title: `"${tag}" tag`
+            })
+            writeFile(join(this.dirBuild, vars.TAGS, tag, "index.html"), html)
+        }
     }
 
     async write(resource: IResource, path: string) {
@@ -162,7 +190,7 @@ export default class Builder {
                 })).then(posts => {
                     let blog_posts = new Map<string, BlogPost>()
                     for (let post of posts) {
-                        blog_posts.set(post.name, post)
+                        blog_posts.set(post.path, post)
                     }
                     resolve(blog_posts)
                 }).catch(err => {

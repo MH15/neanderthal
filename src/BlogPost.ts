@@ -11,7 +11,7 @@ export default class BlogPost implements IResource {
     body: string
 
     attributes
-    authors: string[] = []
+    authors = []
     template: Template
     html: string
     name: string
@@ -23,6 +23,8 @@ export default class BlogPost implements IResource {
     }
 
     load(): Promise<BlogPost> {
+        this.authors = []
+        this.attributes = []
         return new Promise((resolve, reject) => {
             readFile(this.path, result => {
                 // Parse frontmatter meta and markdown body from the file
@@ -52,15 +54,20 @@ export default class BlogPost implements IResource {
 
     async write(path) {
         if (this.html != null) {
-            await writeFile(path, this.html)
+            return await writeFile(path, this.html)
         } else {
             console.error("Cannot write file that has not been rendered.")
         }
     }
 
     parseAuthors() {
+        // TODO: integrate nconfig author fields and Author class
         this.attributes.authors.forEach(username => {
-            this.authors.push(username)
+            this.authors.push({
+                username: username,
+                name: username
+                // name: this.nconfig.authors[author].name || "No Author"
+            })
         })
     }
 }

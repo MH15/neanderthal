@@ -3,6 +3,8 @@ import { join, relative } from "path"
 import CommandLine from "./CommandLine"
 import { RenderTypes } from "./helpers/types"
 import Builder from "./Builder"
+import BlogPost from "./BlogPost"
+import { makeDir } from "./helpers/io"
 var StaticServer = require('static-server')
 
 
@@ -22,11 +24,13 @@ async function build(cli) {
 
 
 }
-function serve(cli) {
+async function serve(cli) {
     console.log("serve")
     // Trigger full initial build
-    build(cli)
-
+    // build(cli)
+    let builder = new Builder(cli.nconfig)
+    await builder.setup()
+    await builder.build()
 
 
     // Watch for post changes
@@ -50,18 +54,36 @@ function serve(cli) {
      * 
      * TODO: support live reload for templates, this might be more complicated
      */
-    watch([dirPosts, dirPages, dirPublic], { recursive: true }, (evt, name) => {
+    watch([dirPosts, dirPages, dirPublic], { recursive: true }, async (evt, name) => {
         if (name.startsWith(dirPosts)) {
+            // Locate the blog post
+            let possiblePath = relative(process.cwd(), name)
+
+            let post: BlogPost = null
+            if (builder.posts.has(possiblePath)) {
+                post = builder.posts.get(possiblePath)
+            } else {
+                // If the post is not loaded in the Builder, create a new BlogPost object
+                post = new BlogPost(possiblePath, "new-post", builder.templates.get("templates/post.njk"))
+                builder.posts.set(post.path, post)
+            }
+
+
             // Render this blog post
-            // TODO
+            let outPath = await builder.loadAndRenderOneBlogPost(post)
+            let relativeInPath = relative(process.cwd(), name)
+            let relativeOutPath = relative(process.cwd(), outPath)
+            cli.log(RenderTypes.Render, relativeOutPath, relativeInPath)
 
             // Render blog index page
-            // TODO
+            await builder.renderBlogIndex()
+            relativeOutPath = relative(process.cwd(), join(dirBuild, "blog", "index.html"))
+            cli.log(RenderTypes.Generated, relativeOutPath)
 
             // Render tags page
-            // TODO
-            let relativePath = relative(process.cwd(), name)
-            cli.log(relativePath, join("build", relativePath), RenderTypes.Render)
+            builder.renderTagsPage()
+            relativeOutPath = relative(process.cwd(), join(dirBuild, "tags"))
+            cli.log(RenderTypes.Generated, relativeOutPath)
         } else if (name.startsWith(dirPages)) {
             // Render this custom page
             // TODO

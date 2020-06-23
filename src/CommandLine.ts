@@ -107,7 +107,7 @@ export default class CommandLine {
         console.log(version)
     }
 
-    log(source: string, destination: string, type: RenderTypes) {
+    log(type: RenderTypes, destination: string, source?: string) {
         switch (type) {
             case RenderTypes.Copy:
                 console.log(`${c.bold.green("Copied")} ${source} to ${destination}.`)
@@ -115,6 +115,8 @@ export default class CommandLine {
             case RenderTypes.Render:
                 console.log(`${c.bold.cyan("Rendered")} ${source} to ${destination}.`)
                 break
+            case RenderTypes.Generated:
+                console.log(`${c.bold.magenta("Generated")} ${destination}.`)
         }
     }
 

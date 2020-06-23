@@ -29,7 +29,7 @@ export function writeFile(filepath, content) {
             if (err) {
                 reject(err)
             }
-            resolve()
+            resolve("saved")
             ioStats.writes++
         })
     })

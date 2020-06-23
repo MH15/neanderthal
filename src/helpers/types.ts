@@ -18,7 +18,7 @@ export interface Author {
 
 
 export enum RenderTypes {
-    Copy = 1,
-    Render = 2,
-
+    Copy = 1,  // Copy files without changing
+    Render,    // Render files from template
+    Generated, // Generate a list of user files  
 }
