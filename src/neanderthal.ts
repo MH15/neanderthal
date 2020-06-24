@@ -111,7 +111,16 @@ async function serve(cli) {
         // }
     })
 
+
+
     server.start(() => {
         console.log("Dev server started")
+    })
+
+    server.on('request', function (req, res) {
+        // req.path is the URL resource (file name) from server.rootPath
+        // req.elapsedTime returns a string of the request's elapsed time
+        console.log(req.url)
+        console.log(res.body)
     })
 }

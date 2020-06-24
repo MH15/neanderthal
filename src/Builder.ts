@@ -140,7 +140,7 @@ export default class Builder {
     renderTagsPage() {
         this.tags = new Map<string, BlogPost[]>()
         this.posts.forEach(post => {
-            let tags = post.attributes.tags
+            let tags = post.attributes.tags || []
             for (let tag of tags) {
                 if (this.tags.has(tag)) {
                     let posts = this.tags.get(tag)

@@ -62,12 +62,14 @@ export default class BlogPost implements IResource {
 
     parseAuthors() {
         // TODO: integrate nconfig author fields and Author class
-        this.attributes.authors.forEach(username => {
-            this.authors.push({
-                username: username,
-                name: username
-                // name: this.nconfig.authors[author].name || "No Author"
+        if (this.attributes.authors) {
+            this.attributes.authors.forEach(username => {
+                this.authors.push({
+                    username: username,
+                    name: username
+                    // name: this.nconfig.authors[author].name || "No Author"
+                })
             })
-        })
+        }
     }
 }
