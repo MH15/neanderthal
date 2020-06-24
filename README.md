@@ -19,6 +19,7 @@ templates as needed.
 - Custom pages.
 - Full support of the CommonMark Markdown spec, thanks to [marked](https://marked.js.org).
 - The power of [Nunjucks](https://mozilla.github.io/nunjucks/) templates.
+- Incremental builds.
 
 ## Getting Started
 The best-practice way to use Neanderthal is with
