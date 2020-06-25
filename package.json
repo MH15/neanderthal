@@ -5,9 +5,7 @@
   "main": "core/build.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "cd build && static-server",
-    "build": "tsc",
-    "hmm": "node -r source-map-support/register cli.js"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
