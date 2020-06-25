@@ -2,7 +2,7 @@
   "name": "neanderthal",
   "version": "0.1.2",
   "description": "static blog machine",
-  "main": "core/build.js",
+  "main": "cli.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
