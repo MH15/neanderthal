@@ -1,6 +1,6 @@
 {
   "name": "neanderthal",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "static blog machine",
   "main": "cli.js",
   "scripts": {
