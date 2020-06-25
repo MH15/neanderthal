@@ -7,6 +7,7 @@ framework. Keep this in mind when proposing new features.
 
 ## Upcoming Features
 Features in progress will be linked below.
+- Theme support
 
 ## Unclaimed Features
 Features we haven't started working on yet, but intend to in the future. Feel free to open a pull request!

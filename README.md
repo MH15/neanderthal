@@ -30,6 +30,11 @@ command will cache the current version of Neanderthal and set up a new project.
 npx neanderthal
 ```
 
+To serve the blog on a dev server with incremental builds.
+```bash
+npx neanderthal --serve
+```
+
 
 # Documentation
 The docs for neanderthal should always fit in this Github Readme.

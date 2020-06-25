@@ -22,8 +22,8 @@ async function build(cli) {
     await builder.setup()
     await builder.build()
 
-
 }
+
 async function serve(cli) {
     console.log("serve")
     // Trigger full initial build
