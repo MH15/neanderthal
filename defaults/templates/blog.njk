@@ -1,0 +1,15 @@
+{% extends "templates/base.njk" %}
+
+{% block body %}
+    <h1>Blog Posts</h1>
+    <ul>
+        {% for post in blog_posts %}
+            <li>
+                <a href="blog/{{ post.name }}">{{ post.attributes.title }}</a>
+                Posted {{post.attributes.date_published}}
+            </li>
+        {% else %}
+            No blog posts.
+        {% endfor %}
+    </ul>
+{% endblock %}

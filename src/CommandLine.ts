@@ -1,5 +1,5 @@
 import * as c from "ansi-colors"
-import { existsSync } from "fs-extra"
+import { existsSync, copy } from "fs-extra"
 import { join } from "path"
 import * as terminalLink from "terminal-link"
 import * as yesno from 'yesno'
@@ -76,6 +76,16 @@ export default class CommandLine {
             question: 'Add sample directories? (Y/n)',
             defaultValue: true
         })
+        if (addDirectories) {
+            let defaults = join(__dirname, "..", "defaults")
+            console.log(this.cwd)
+            await copy(join(defaults, "posts"), join(this.cwd, "posts"))
+            await copy(join(defaults, "pages"), join(this.cwd, "pages"))
+            await copy(join(defaults, "templates"), join(this.cwd, "templates"))
+            await copy(join(defaults, "public"), join(this.cwd, "public"))
+            await copy(join(defaults, "labs"), join(this.cwd, "labs"))
+
+        }
 
         console.log(c.green(`You're all set up!`))
         console.log(c.green(`Run ${c.bold("npx neanderthal")} to build your site or run ${c.bold("npx neanderthal --serve")} to start a dev server.`))

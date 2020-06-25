@@ -4,7 +4,7 @@ A static hypertext generator for your blog or website.
 
 [![Join the chat at https://gitter.im/neanderthal-static-sites/community](https://badges.gitter.im/neanderthal-static-sites/community.svg)](https://gitter.im/neanderthal-static-sites/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-## Overview.
+## Overview
 
 Neanderthal transpiles structured Markdown and Nunjucks content to a static
 blog, with support for custom pages, tagged posts, and authors. You can write
@@ -25,12 +25,12 @@ templates as needed.
 The best-practice way to use Neanderthal is with
 [npx](https://blog.npmjs.org/post/162869356040/introducing-npx-an-npm-package-runner).
 This will ensure you always use the current stable release. Running the below
-command will cache the current version of Neanderthal and set up a new project.
+command to cache the current version of Neanderthal and set up a new project:
 ```bash
 npx neanderthal
 ```
 
-To serve the blog on a dev server with incremental builds.
+To serve the blog on a dev server with incremental builds, run:
 ```bash
 npx neanderthal --serve
 ```
