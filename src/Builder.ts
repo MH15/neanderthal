@@ -67,7 +67,7 @@ export default class Builder {
         let orderedPosts = Array.from(this.posts.values())
         orderedPosts.sort(compareDatePublished)
         // Generate the root blog page as a list of recent posts by date
-        let html = this.templates.get("templates/blog.njk").render({
+        let html = this.templates.get(join(vars.TEMPLATES, "blog.njk")).render({
             blog_posts: orderedPosts,
             meta: this.nconfig.meta,
             title: "Blog"
@@ -96,7 +96,7 @@ export default class Builder {
         makeDir("build/author")
         Object.keys(this.nconfig.authors).forEach(async (username) => {
             let author = this.nconfig.authors[username]
-            let html = this.templates.get("templates/author.njk").render({
+            let html = this.templates.get(join(vars.TEMPLATES, "author.njk")).render({
                 author,
                 title: author.name
             })
@@ -157,7 +157,7 @@ export default class Builder {
         makeDir("build/tags")
         let tags = Array.from(this.tags.keys())
         for (let tag of tags) {
-            let html = this.templates.get("templates/tag.njk").render({
+            let html = this.templates.get(join(vars.TEMPLATES, "tag.njk")).render({
                 tag,
                 blog_posts: this.tags.get(tag),
                 meta: this.nconfig.meta,
@@ -176,7 +176,7 @@ export default class Builder {
             readdir(this.dirPosts, (err, folders) => {
                 if (err) reject(err)
 
-                let template = this.templates.get("templates/post.njk")
+                let template = this.templates.get(join(vars.TEMPLATES, "post.njk"))
                 // Load all blog posts concurrently but wait until they are all
                 // loaded before resolving the Promise.
                 Promise.all(folders.map(async folder => {
@@ -208,7 +208,7 @@ export default class Builder {
             readdir(this.dirPages, (err, folders) => {
                 if (err) reject(err)
 
-                let template = this.templates.get("templates/page.njk")
+                let template = this.templates.get(join(vars.TEMPLATES, "page.njk"))
                 // Load all blog posts concurrently but wait until they are all
                 // loaded before resolving the Promise.
                 Promise.all(folders.map(async folder => {

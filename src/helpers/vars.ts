@@ -5,5 +5,6 @@ export default {
     BUILD: "build",
     BLOG: "blog",
     TAGS: "tags",
-    AUTHORS: "author"
+    AUTHORS: "author",
+    TEMPLATES: "templates"
 }
