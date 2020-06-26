@@ -39,6 +39,7 @@
     "typescript": "^3.9.5"
   },
   "files": [
-    "build"
+    "build",
+    "defaults"
   ]
 }
