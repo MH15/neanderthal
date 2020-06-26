@@ -25,7 +25,7 @@ async function build(cli) {
 }
 
 async function serve(cli) {
-    console.log("serve")
+    console.log("serving")
     // Trigger full initial build
     // build(cli)
     let builder = new Builder(cli.nconfig)

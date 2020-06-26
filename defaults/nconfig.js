@@ -13,15 +13,15 @@ module.exports = {
     },
     // All authors must be defined here.
     authors: {
-        "peter-hall": {
-            name: "Peter Hall",
+        "first-author": {
+            name: "First Author",
             short_bio: "short bio catchphrase",
-            bio: "a whole fucking paragraph."
+            bio: "a whole HTML paragraph."
         },
-        "deklin-caban": {
-            name: "Deklin Caban",
-            short_bio: "and I yeet.",
-            bio: "a whole fucking paragraph."
+        "second-author": {
+            name: "Second Author",
+            short_bio: "a short bio.",
+            bio: "a whole HTML paragraph."
         }
     },
     config: {

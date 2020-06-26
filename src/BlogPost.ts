@@ -18,7 +18,11 @@ export default class BlogPost implements IResource {
     constructor(path: string, name: string, template: Template) {
         this.path = path
         this.name = name
-        this.template = template
+        if (template != null) {
+            this.template = template
+        } else {
+            throw new Error("Template does not exist.")
+        }
         this.html = null
     }
 

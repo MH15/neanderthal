@@ -31,6 +31,7 @@ export default class CommandLine {
 
 
         // Check if a config file exists, if not show onboarding
+        // TODO: allow help and version to be displayed before onboarding
         if (existsSync(join(this.cwd, "nconfig.js"))) {
             this.nconfig = require(join(this.cwd, "nconfig.js"))
             // Do normal build or check parameters
