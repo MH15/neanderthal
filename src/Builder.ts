@@ -27,7 +27,6 @@ export default class Builder {
 
     async setup() {
         this.templates = await loadTemplates()
-        console.log(this.templates.keys())
         this.authors = this.nconfig.authors // this won't autoreload, think about this more
     }
 
