@@ -35,6 +35,13 @@ To serve the blog on a dev server with incremental builds, run:
 npx neanderthal --serve
 ```
 
+It's recommended to lock the version of Neanderthal you are using to your
+`package.json` file by calling
+```bash
+npm install --save-dev neanderthal
+```
+Now `npx` will run your project's cached installation of Neanderthal without polluting the global scope.
+
 
 # Documentation
 The docs for neanderthal should always fit in this Github Readme.
