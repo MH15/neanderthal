@@ -2,6 +2,8 @@ import CustomPage from "./CustomPage"
 import IResource from "./IResource"
 import { Template } from "./Template"
 import { writeFile, readFile, readFileIfExists } from "./helpers/io"
+import { copy } from "fs-extra"
+import { parse } from "path"
 const frontmatter = require("front-matter")
 const marked = require("marked")
 
@@ -59,6 +61,17 @@ export default class BlogPost implements IResource {
     }
 
     async write(path) {
+        // Copy all dependencies
+        // TODO: do this better using the new v0.2.0 structure
+        console.log("COPY", parse(this.path).dir)
+        await copy(parse(this.path).dir, parse(path).dir, {
+            filter: (src: string, dest: string): boolean => {
+                console.log(src, ",", this.path)
+                return true
+            }
+        })
+
+        // Write rendered HTML
         if (this.html != null) {
             return await writeFile(path, this.html)
         } else {
