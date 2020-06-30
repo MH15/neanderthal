@@ -5,6 +5,7 @@ import * as terminalLink from "terminal-link"
 import * as yesno from 'yesno'
 import { readFile, writeFile } from "./helpers/io"
 import { RenderTypes } from "./helpers/types"
+import { NeanderthalError, ResourceNotFound } from "./helpers/exceptions"
 /**
  * Calling `npx neanderthal` should build your directory, operating in the following steps.
  * 1. Check for an nconfig.json. If that file does not exist:
@@ -129,6 +130,11 @@ export default class CommandLine {
             case RenderTypes.Generated:
                 console.log(`${c.bold.magenta("Generated")} ${destination}.`)
         }
+    }
+
+    error(err: NeanderthalError) {
+        console.log(`${c.bold.red("Error")} Code: ${err.code}, ${err.message}`)
+        process.exit(0)
     }
 
     exit() {

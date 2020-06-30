@@ -1,8 +1,9 @@
 import IResource from "./IResource"
 import { Template } from "./Template"
-import { writeFile, readFile } from "./helpers/io"
+import { writeFile, readFile, ioStats, readFileIfExists } from "./helpers/io"
 const frontmatter = require("front-matter")
 const marked = require("marked")
+import * as fs from "fs-extra"
 
 
 export default class CustomPage implements IResource {
@@ -23,10 +24,11 @@ export default class CustomPage implements IResource {
 
     load(): Promise<CustomPage> {
         return new Promise((resolve, reject) => {
-            readFile(this.path, result => {
-                this.body = result
-
+            readFileIfExists(this.path).then(data => {
+                this.body = data
                 resolve(this)
+            }).catch(err => {
+                reject(err)
             })
         })
     }

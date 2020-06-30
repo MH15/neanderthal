@@ -1,7 +1,7 @@
 import CustomPage from "./CustomPage"
 import IResource from "./IResource"
 import { Template } from "./Template"
-import { writeFile, readFile } from "./helpers/io"
+import { writeFile, readFile, readFileIfExists } from "./helpers/io"
 const frontmatter = require("front-matter")
 const marked = require("marked")
 
@@ -30,15 +30,17 @@ export default class BlogPost implements IResource {
         this.authors = []
         this.attributes = []
         return new Promise((resolve, reject) => {
-            readFile(this.path, result => {
+            readFileIfExists(this.path).then(data => {
                 // Parse frontmatter meta and markdown body from the file
-                let content = frontmatter(result)
+                let content = frontmatter(data)
                 this.attributes = content.attributes
                 this.body = content.body
 
                 this.parseAuthors()
 
                 resolve(this)
+            }).catch(err => {
+                reject(err)
             })
         })
     }
