@@ -53,6 +53,7 @@ export default class Builder {
         })
     }
 
+    // TODO: Make a resource renderer instead of these two functions
     async loadAndRenderOneBlogPost(post: BlogPost): Promise<string> {
         await post.load()
         let postBuildDir = join(this.dirBuild, "blog", post.name)
@@ -62,10 +63,10 @@ export default class Builder {
             meta: this.nconfig.meta
         })
         await post.write(postBuildFile)
-        // console.log(result)
         return postBuildFile
     }
 
+    // TODO: Make a resource renderer instead of these two functions
     async loadAndRenderOneCustomPage(page: CustomPage): Promise<string> {
         await page.load()
         let pageBuildDir = join(this.dirBuild, page.name)
@@ -75,7 +76,6 @@ export default class Builder {
             meta: this.nconfig.meta
         })
         await page.write(pageBuildFile)
-        // console.log(result)
         return pageBuildFile
     }
 
@@ -198,10 +198,13 @@ export default class Builder {
                 Promise.all(folders.map(async folder => {
                     let folderPath = join(vars.POSTS, folder)
                     if (isDir(folderPath)) {
-                        let postPath = join(this.dirBuild, "blog", folder)
                         let indexPath = join(folderPath, "index.md")
                         let blogPost = new BlogPost(indexPath, folder, template)
-                        await blogPost.load()
+                        try {
+                            await blogPost.load()
+                        } catch (err) {
+                            this.cli.error(err)
+                        }
                         return blogPost
                     }
                 })).then(posts => {
@@ -241,9 +244,7 @@ export default class Builder {
                     }
                 })).then(pages => {
                     let customPages = new Map<string, CustomPage>()
-                    // console.log("PAGES", pages.length, pages)
                     for (let page of pages) {
-                        // console.log("PAGE", page.name)
                         if (page) {
                             customPages.set(page.path, page)
                         }

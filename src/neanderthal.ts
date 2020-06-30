@@ -13,14 +13,6 @@ var StaticServer = require('static-server')
 // Parse command line args
 let root = new CommandLine(false, build, serve)
 
-process.on('uncaughtException', (err, origin) => {
-
-    // console.log(
-    //     `Caught exception: ${err}\n` +
-    //     `Exception origin: ${origin}`
-    // )
-    console.trace(err)
-})
 
 
 
@@ -36,7 +28,6 @@ async function build(cli) {
 }
 
 async function serve(cli) {
-    console.log("serving")
     // Trigger full initial build
     // build(cli)
     let builder = new Builder(cli)
@@ -80,7 +71,7 @@ async function serve(cli) {
                 post = builder.posts.get(possiblePath)
             } else {
                 // If the post is not loaded in the Builder, create a new BlogPost object
-                let relativeNamePath = relative(dirPages, parse(possiblePath).dir)
+                let relativeNamePath = relative(dirPosts, parse(possiblePath).dir)
                 post = new BlogPost(possiblePath, relativeNamePath, builder.templates.get("templates/post.njk"))
                 builder.posts.set(post.path, post)
             }
