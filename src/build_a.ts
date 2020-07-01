@@ -111,7 +111,6 @@ async function build() {
 	// posting projects outside the blog structure.
 	await fs.copy(path.join("labs"), path.join("build", "labs"))
 
-	console.log(io.ioStats)
 }
 
 

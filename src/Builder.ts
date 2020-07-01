@@ -7,6 +7,7 @@ import { join } from "path"
 import { isDir, makeDir, writeFile, deleteDir } from "./helpers/io"
 import { readdir, readFileSync, copy } from "fs-extra"
 import vars from "./helpers/vars"
+import CommandLine from "./CommandLine"
 const nunjucks = require("nunjucks")
 
 export default class Builder {
@@ -17,12 +18,15 @@ export default class Builder {
     templates: Map<string, Template>
     nconfig
 
+    cli: CommandLine
+
     dirPosts = join(process.cwd(), "posts")
     dirPages = join(process.cwd(), "pages")
     dirBuild = join(process.cwd(), vars.BUILD)
 
-    constructor(nconfig) {
-        this.nconfig = nconfig
+    constructor(cli: CommandLine) {
+        this.nconfig = cli.nconfig
+        this.cli = cli
     }
 
     async setup() {
@@ -49,6 +53,7 @@ export default class Builder {
         })
     }
 
+    // TODO: Make a resource renderer instead of these two functions
     async loadAndRenderOneBlogPost(post: BlogPost): Promise<string> {
         await post.load()
         let postBuildDir = join(this.dirBuild, "blog", post.name)
@@ -58,8 +63,20 @@ export default class Builder {
             meta: this.nconfig.meta
         })
         await post.write(postBuildFile)
-        // console.log(result)
         return postBuildFile
+    }
+
+    // TODO: Make a resource renderer instead of these two functions
+    async loadAndRenderOneCustomPage(page: CustomPage): Promise<string> {
+        await page.load()
+        let pageBuildDir = join(this.dirBuild, page.name)
+        makeDir(pageBuildDir)
+        let pageBuildFile = join(pageBuildDir, "index.html")
+        page.render({
+            meta: this.nconfig.meta
+        })
+        await page.write(pageBuildFile)
+        return pageBuildFile
     }
 
     async renderBlogIndex() {
@@ -77,7 +94,7 @@ export default class Builder {
     async build() {
         this.clean()
         // Create `build/blog`
-        makeDir("build/blog")
+        makeDir(join("build", "blog"))
         // The Map of BlogPosts is used by a lot of things so we'll await that
         this.posts = await this.loadBlogPosts()
 
@@ -92,7 +109,7 @@ export default class Builder {
         this.renderBlogIndex()
 
         // Create pages for each author defined in `nconfig.js` using the "author" template
-        makeDir("build/author")
+        makeDir(join("build", "author"))
         Object.keys(this.nconfig.authors).forEach(async (username) => {
             let author = this.nconfig.authors[username]
             let html = this.templates.get(join(vars.TEMPLATES, "author.njk")).render({
@@ -106,7 +123,7 @@ export default class Builder {
         this.pages = await this.loadPages()
         // No need to wait for the completion of this write
         this.pages.forEach((page, name, map) => {
-            let postPath = join("build", name)
+            let postPath = join("build", page.name)
             makeDir(postPath)
             let buildPath = join(postPath, "index.html")
             page.render({
@@ -117,6 +134,18 @@ export default class Builder {
 
         // Render `pages/index.njk` from the pages directory to `build/index.html`.
         // This is the homepage of the app.
+        this.renderIndexPage()
+        // Copy all files from `public` to `build/public`. Public files are css, js,
+        // etc that can be referenced from anywhere under the `public` route.
+        this.copyPublic()
+
+        // Copy all files from `labs` to `build/labs`. Labs are raw html5 for 
+        // posting projects outside the blog structure.
+        await copy(join("labs"), join("build", "labs"))
+
+    }
+
+    renderIndexPage() {
         let indexPath = join(this.dirPages, "index.njk")
         let content = readFileSync(join(this.dirPages, "index.njk"), "utf8")
         let html = nunjucks.renderString(content, {
@@ -125,18 +154,15 @@ export default class Builder {
         })
         writeFile(join(this.dirBuild, "index.html"), html)
 
-        // Copy all files from `public` to `build/public`. Public files are css, js,
-        // etc that can be referenced from anywhere under the `public` route.
+    }
+
+
+    copyPublic() {
         copy(join("public"), join("build", "public")).catch(err => {
             console.error(err)
         })
-
-        // Copy all files from `labs` to `build/labs`. Labs are raw html5 for 
-        // posting projects outside the blog structure.
-        await copy(join("labs"), join("build", "labs"))
-
-
     }
+
     renderTagsPage() {
         this.tags = new Map<string, BlogPost[]>()
         this.posts.forEach(post => {
@@ -179,18 +205,23 @@ export default class Builder {
                 // Load all blog posts concurrently but wait until they are all
                 // loaded before resolving the Promise.
                 Promise.all(folders.map(async folder => {
-                    let folderPath = join("posts", folder)
+                    let folderPath = join(vars.POSTS, folder)
                     if (isDir(folderPath)) {
-                        let postPath = join(this.dirBuild, "blog", folder)
                         let indexPath = join(folderPath, "index.md")
                         let blogPost = new BlogPost(indexPath, folder, template)
-                        await blogPost.load()
+                        try {
+                            await blogPost.load()
+                        } catch (err) {
+                            this.cli.error(err)
+                        }
                         return blogPost
                     }
                 })).then(posts => {
                     let blog_posts = new Map<string, BlogPost>()
                     for (let post of posts) {
-                        blog_posts.set(post.path, post)
+                        if (post !== undefined) {
+                            blog_posts.set(post.path, post)
+                        }
                     }
                     resolve(blog_posts)
                 }).catch(err => {
@@ -211,20 +242,22 @@ export default class Builder {
                 // Load all blog posts concurrently but wait until they are all
                 // loaded before resolving the Promise.
                 Promise.all(folders.map(async folder => {
-                    let folderPath = join(this.dirPages, folder)
+                    let folderPath = join(vars.PAGES, folder)
                     if (isDir(folderPath)) {
                         let indexPath = join(folderPath, "index.njk")
-                        let blogPost = new CustomPage(indexPath, folder, template)
-                        await blogPost.load()
-                        return blogPost
+                        let page = new CustomPage(indexPath, folder, template)
+                        try {
+                            await page.load()
+                        } catch (err) {
+                            this.cli.error(err)
+                        }
+                        return page
                     }
                 })).then(pages => {
                     let customPages = new Map<string, CustomPage>()
-                    // console.log("PAGES", pages.length, pages)
                     for (let page of pages) {
-                        // console.log("PAGE", page.name)
                         if (page) {
-                            customPages.set(page.name, page)
+                            customPages.set(page.path, page)
                         }
                     }
                     resolve(customPages)

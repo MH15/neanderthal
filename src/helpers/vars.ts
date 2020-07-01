@@ -6,5 +6,7 @@ export default {
     BLOG: "blog",
     TAGS: "tags",
     AUTHORS: "author",
-    TEMPLATES: "templates"
+    TEMPLATES: "templates",
+    PAGES: "pages",
+    POSTS: "posts"
 }

@@ -1,10 +1,11 @@
 import * as c from "ansi-colors"
 import { existsSync, copy } from "fs-extra"
 import { join } from "path"
-import * as terminalLink from "terminal-link"
-import * as yesno from 'yesno'
+import terminalLink from "terminal-link"
+import yesno from 'yesno'
 import { readFile, writeFile } from "./helpers/io"
 import { RenderTypes } from "./helpers/types"
+import { NeanderthalError, ResourceNotFound } from "./helpers/exceptions"
 /**
  * Calling `npx neanderthal` should build your directory, operating in the following steps.
  * 1. Check for an nconfig.json. If that file does not exist:
@@ -129,6 +130,11 @@ export default class CommandLine {
             case RenderTypes.Generated:
                 console.log(`${c.bold.magenta("Generated")} ${destination}.`)
         }
+    }
+
+    error(err: NeanderthalError) {
+        console.log(`${c.bold.red("Error")} Code: ${err.code}, ${err.message}`)
+        process.exit(0)
     }
 
     exit() {

@@ -1,7 +1,9 @@
 import CustomPage from "./CustomPage"
 import IResource from "./IResource"
 import { Template } from "./Template"
-import { writeFile, readFile } from "./helpers/io"
+import { writeFile, readFile, readFileIfExists } from "./helpers/io"
+import { copy } from "fs-extra"
+import { parse } from "path"
 const frontmatter = require("front-matter")
 const marked = require("marked")
 
@@ -30,15 +32,17 @@ export default class BlogPost implements IResource {
         this.authors = []
         this.attributes = []
         return new Promise((resolve, reject) => {
-            readFile(this.path, result => {
+            readFileIfExists(this.path).then(data => {
                 // Parse frontmatter meta and markdown body from the file
-                let content = frontmatter(result)
+                let content = frontmatter(data)
                 this.attributes = content.attributes
                 this.body = content.body
 
                 this.parseAuthors()
 
                 resolve(this)
+            }).catch(err => {
+                reject(err)
             })
         })
     }
@@ -57,6 +61,17 @@ export default class BlogPost implements IResource {
     }
 
     async write(path) {
+        // Copy all dependencies
+        // TODO: do this better using the new v0.2.0 structure
+        // console.log("COPY", parse(this.path).dir)
+        await copy(parse(this.path).dir, parse(path).dir, {
+            filter: (src: string, dest: string): boolean => {
+                // console.log(src, ",", this.path)
+                return src !== this.path
+            }
+        })
+
+        // Write rendered HTML
         if (this.html != null) {
             return await writeFile(path, this.html)
         } else {

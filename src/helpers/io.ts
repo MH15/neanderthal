@@ -1,6 +1,7 @@
 
 import * as fs from "fs-extra"
 import * as path from "path"
+import { ResourceNotFound } from "./exceptions"
 
 export const ioStats = {
     writes: 0,
@@ -40,9 +41,36 @@ export function readFile(filepath, callback) {
     fs.readFile(filepath, "utf8", (err, result) => {
         if (err) {
             console.error(err)
-            throw err
         }
         callback(result)
         ioStats.reads++
     })
+}
+
+export function readFileIfExists(filepath): Promise<string> {
+    return new Promise((resolve, reject) => {
+        if (fs.existsSync(filepath)) {
+            fs.lstat(filepath).then(stats => {
+                if (stats.isFile()) {
+                    fs.readFile(filepath, "utf8", (err, result) => {
+                        if (err) {
+                            reject(false)
+                        }
+                        resolve(result)
+                        ioStats.reads++
+                    })
+                }
+            }).catch(err => {
+                reject(err)
+
+            })
+        } else {
+            reject(new ResourceNotFound(filepath))
+        }
+
+    })
+}
+
+export function isFile(filepath) {
+    return fs.existsSync(filepath) && fs.lstatSync(filepath).isFile()
 }
