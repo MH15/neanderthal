@@ -210,7 +210,9 @@ export default class Builder {
                 })).then(posts => {
                     let blog_posts = new Map<string, BlogPost>()
                     for (let post of posts) {
-                        blog_posts.set(post.path, post)
+                        if (post !== undefined) {
+                            blog_posts.set(post.path, post)
+                        }
                     }
                     resolve(blog_posts)
                 }).catch(err => {
