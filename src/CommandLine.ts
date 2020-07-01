@@ -1,8 +1,8 @@
 import * as c from "ansi-colors"
 import { existsSync, copy } from "fs-extra"
 import { join } from "path"
-import * as terminalLink from "terminal-link"
-import * as yesno from 'yesno'
+import terminalLink from "terminal-link"
+import yesno from 'yesno'
 import { readFile, writeFile } from "./helpers/io"
 import { RenderTypes } from "./helpers/types"
 import { NeanderthalError, ResourceNotFound } from "./helpers/exceptions"

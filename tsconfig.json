@@ -5,6 +5,7 @@
         "downlevelIteration": true,
         // "target": "ES5",
         // "moduleResolution": "node"
+        "esModuleInterop": true
     },
     "include": [
         "src/**/*"

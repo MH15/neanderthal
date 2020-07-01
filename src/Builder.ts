@@ -94,7 +94,7 @@ export default class Builder {
     async build() {
         this.clean()
         // Create `build/blog`
-        makeDir("build/blog")
+        makeDir(join("build", "blog"))
         // The Map of BlogPosts is used by a lot of things so we'll await that
         this.posts = await this.loadBlogPosts()
 
@@ -109,7 +109,7 @@ export default class Builder {
         this.renderBlogIndex()
 
         // Create pages for each author defined in `nconfig.js` using the "author" template
-        makeDir("build/author")
+        makeDir(join("build", "author"))
         Object.keys(this.nconfig.authors).forEach(async (username) => {
             let author = this.nconfig.authors[username]
             let html = this.templates.get(join(vars.TEMPLATES, "author.njk")).render({
@@ -134,6 +134,18 @@ export default class Builder {
 
         // Render `pages/index.njk` from the pages directory to `build/index.html`.
         // This is the homepage of the app.
+        this.renderIndexPage()
+        // Copy all files from `public` to `build/public`. Public files are css, js,
+        // etc that can be referenced from anywhere under the `public` route.
+        this.copyPublic()
+
+        // Copy all files from `labs` to `build/labs`. Labs are raw html5 for 
+        // posting projects outside the blog structure.
+        await copy(join("labs"), join("build", "labs"))
+
+    }
+
+    renderIndexPage() {
         let indexPath = join(this.dirPages, "index.njk")
         let content = readFileSync(join(this.dirPages, "index.njk"), "utf8")
         let html = nunjucks.renderString(content, {
@@ -142,18 +154,15 @@ export default class Builder {
         })
         writeFile(join(this.dirBuild, "index.html"), html)
 
-        // Copy all files from `public` to `build/public`. Public files are css, js,
-        // etc that can be referenced from anywhere under the `public` route.
+    }
+
+
+    copyPublic() {
         copy(join("public"), join("build", "public")).catch(err => {
             console.error(err)
         })
-
-        // Copy all files from `labs` to `build/labs`. Labs are raw html5 for 
-        // posting projects outside the blog structure.
-        await copy(join("labs"), join("build", "labs"))
-
-
     }
+
     renderTagsPage() {
         this.tags = new Map<string, BlogPost[]>()
         this.posts.forEach(post => {
