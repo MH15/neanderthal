@@ -5,7 +5,7 @@
     <ul>
         {% for post in blog_posts %}
             <li>
-                <a href="blog/{{ post.name }}">{{ post.attributes.title }}</a>
+                <a href="/blog/{{ post.name }}">{{ post.attributes.title }}</a>
                 Posted {{post.attributes.date_published}}
             </li>
         {% else %}
