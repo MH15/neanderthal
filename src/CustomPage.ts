@@ -2,7 +2,6 @@ import IResource from "./IResource"
 import { Template } from "./Template"
 import { writeFile, readFile, ioStats, readFileIfExists } from "./helpers/io"
 const frontmatter = require("front-matter")
-const marked = require("marked")
 import * as fs from "fs-extra"
 const nunjucks = require("nunjucks")
 
@@ -38,13 +37,11 @@ export default class CustomPage implements IResource {
         let innerHTML = nunjucks.renderString(this.body, {
             meta: data.meta || {}
         })
-        console.log("inner", innerHTML)
 
         this.html = this.template.render({
             page: innerHTML,
             meta: data.meta || {}
         })
-        console.log("rendering", this.template)
         return this.html
     }
 
