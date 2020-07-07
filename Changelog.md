@@ -6,7 +6,7 @@ published to NPM.
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-# 0.1.11 [unreleased]
+# 0.1.11
 Updated Markdown renderer, draft posts.
 - Changelog added.
 - Markdown renderer changed to [`markdown-it`](https://github.com/markdown-it/markdown-it).
