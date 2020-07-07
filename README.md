@@ -2,7 +2,11 @@
 
 A static hypertext generator for your blog or website. 
 
-[![Join the chat at https://gitter.im/neanderthal-static-sites/community](https://badges.gitter.im/neanderthal-static-sites/community.svg)](https://gitter.im/neanderthal-static-sites/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![NPM version](https://img.shields.io/npm/v/neanderthal)](https://www.npmjs.com/package/neanderthal)
+![npm](https://img.shields.io/npm/dt/neanderthal)
+![GitHub](https://img.shields.io/github/license/mh15/neanderthal)
+[![Join the chat at
+https://gitter.im/neanderthal-static-sites/community](https://badges.gitter.im/neanderthal-static-sites/community.svg)](https://gitter.im/neanderthal-static-sites/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Overview
 
