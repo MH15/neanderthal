@@ -3,8 +3,8 @@
 A static hypertext generator for your blog or website. 
 
 [![NPM version](https://img.shields.io/npm/v/neanderthal)](https://www.npmjs.com/package/neanderthal)
-![npm](https://img.shields.io/npm/dt/neanderthal)
-![GitHub](https://img.shields.io/github/license/mh15/neanderthal)
+[![NPM downloads](https://img.shields.io/npm/dt/neanderthal)](https://www.npmjs.com/package/neanderthal)
+[![GitHub](https://img.shields.io/github/license/mh15/neanderthal)](https://github.com/MH15/neanderthal/blob/master/LICENSE)
 [![Join the chat at
 https://gitter.im/neanderthal-static-sites/community](https://badges.gitter.im/neanderthal-static-sites/community.svg)](https://gitter.im/neanderthal-static-sites/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
