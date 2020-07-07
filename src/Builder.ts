@@ -46,10 +46,14 @@ export default class Builder {
             let postPath = join("build", "blog", post.name)
             makeDir(postPath)
             let buildPath = join(postPath, "index.html")
-            post.render({
-                meta: this.nconfig.meta
-            })
-            post.write(buildPath)
+            if (!post.attributes.draft) {
+                post.render({
+                    meta: this.nconfig.meta
+                })
+                post.write(buildPath)
+            } else {
+                console.log("draft post")
+            }
         })
     }
 
@@ -214,7 +218,13 @@ export default class Builder {
                         } catch (err) {
                             this.cli.error(err)
                         }
-                        return blogPost
+                        console.log(blogPost.attributes)
+                        // Ignore draft posts
+                        if (!blogPost.attributes.draft) {
+                            return blogPost
+                        } else {
+                            return undefined
+                        }
                     }
                 })).then(posts => {
                     let blog_posts = new Map<string, BlogPost>()

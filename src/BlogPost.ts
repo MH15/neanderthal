@@ -6,7 +6,11 @@ import { copy } from "fs-extra"
 import { parse } from "path"
 const frontmatter = require("front-matter")
 const marked = require("marked")
+import markdownIt from "markdown-it"
 
+const md = markdownIt({
+
+}).use(require('markdown-it-footnote'))
 
 export default class BlogPost implements IResource {
     path: string
@@ -18,6 +22,7 @@ export default class BlogPost implements IResource {
     html: string
     name: string
     constructor(path: string, name: string, template: Template) {
+
         this.path = path
         this.name = name
         if (template != null) {
@@ -48,7 +53,7 @@ export default class BlogPost implements IResource {
     }
 
     render(data): string {
-        let markdown = marked(this.body)
+        let markdown = md.render(this.body)
 
         this.html = this.template.render({
             markdown: markdown,
