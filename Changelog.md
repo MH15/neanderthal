@@ -1,5 +1,4 @@
 # Neanderthal Project Changelog
-# Changelog
 All notable changes to this project will be documented in this file, as
 published to NPM.
 
