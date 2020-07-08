@@ -118,7 +118,7 @@ There is a general [Roadmap](https://github.com/MH15/neanderthal/blob/master/Roa
 project, but feel free to open issues with new feature proposals.
 
 ## Code of Conduct
-Please read the project [Code of Conduct](hhttps://github.com/MH15/neanderthal/blob/master/CODE_OF_CONDUCT.md).
+Please read the project [Code of Conduct](https://github.com/MH15/neanderthal/blob/master/CODE_OF_CONDUCT.md).
 
 
 
