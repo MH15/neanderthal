@@ -16,7 +16,6 @@ posts in Markdown with front matter metadata, then customize the Nunjucks
 templates as needed.
 
 ### Features
-
 - Blog posts with support for multiple authors.
 - A full tagging system.
 - Author profile pages.
@@ -24,12 +23,17 @@ templates as needed.
 - Full support of the CommonMark Markdown spec, thanks to [marked](https://marked.js.org).
 - The power of [Nunjucks](https://mozilla.github.io/nunjucks/) templates.
 - Incremental builds.
+  
+See the
+[Changelog](https://github.com/MH15/neanderthal/blob/master/Changelog.md) for a
+full project history.
 
 ## Getting Started
-The best-practice way to use Neanderthal is with
+The best-practice way to run Neanderthal is with
 [npx](https://blog.npmjs.org/post/162869356040/introducing-npx-an-npm-package-runner).
-This will ensure you always use the current stable release. Running the below
-command to cache the current version of Neanderthal and set up a new project:
+This will ensure you always use the release you started your project with.
+Running the below command to cache the current version of Neanderthal and set up
+a new project:
 ```bash
 npx neanderthal
 ```
@@ -48,9 +52,14 @@ Now `npx` will run your project's cached installation of Neanderthal without pol
 
 
 # Documentation
-The docs for neanderthal should always fit in this Github Readme.
+Below are the docs for Neanderthal as it stands today, we'd love to see a pull
+request to set up external documentation.
 
-## Making a blog post
+## Starting the Development Server
+Run `npx neanderthal -s` to start a dev server on port 9080. Make changes to
+files and they'll recompile. Refresh the page and it will show your changes.
+
+## Making a new blog post
 1. Open the `posts/` directory in your neanderthal project. 
 2. Create a new folder
 with the URL for your post, e.g. "learning-git". 
@@ -59,14 +68,19 @@ content from [posts/template/index.md](/posts/template/index.md).
 4. Edit the frontmatter (the stuff between the dashed lines) to customize
    metadata for your post, then edit the markdown body.
 
-## Configuration ([`nconfig.js`](/nconfig.js))
-Often the first file to edit, the more information you can store in here the
-simpler your development process will be. 
+## Configuration in [`nconfig.js`](https://github.com/MH15/neanderthal/blob/master/defaults/nconfig.js)
+Often the first file to edit, the more information you store in here will make
+your project more consistent.
+
 
 ### `meta`
 The `meta` object is sent to every
 Nunjucks template rendered in your site. You can add any information to this
-object you may need, such as the site name and organization.
+object you may need, such as the site name and organization. This object is
+available in **any** Nunjucks template in your entire project.
+```nunjucks
+{{ meta.name }}
+```
 
 ### `authors`
 You must choose a unique URL as the key for each author in the `authors` object.
@@ -77,8 +91,7 @@ passed into an author object is not rendered by default. You will need to access
 the data in the respective template.
 
 ### `config`
-The `config` object controls the build process. **TODO**.
-
+The `config` object controls the build process. This is not yet implemented. **TODO**.
 
 
 ## Templating
@@ -94,19 +107,18 @@ info.
 
 ## Help
 
-If our [docs](#documentation) don't suffice, check
-the [troubleshooting](#troubleshooting) section or ask for help on our
+If our [docs](#documentation) don't suffice, ask for help on our
 [Gitter](https://gitter.im/neanderthal-static-sites/community). If you find a
-verifiable bug, please file an issue.
+verifiable bug, please file an [issue](https://github.com/MH15/neanderthal/issues).
 
 
 ## Contributing
 We are looking for your help to make Neanderthal better!
-There is a general [Roadmap](https://github.com/mh15/neanderthal/Roadmap.md) for
+There is a general [Roadmap](https://github.com/MH15/neanderthal/blob/master/Roadmap.md) for
 project, but feel free to open issues with new feature proposals.
 
 ## Code of Conduct
-TODO
+Please read the project [Code of Conduct](https://github.com/MH15/neanderthal/blob/master/CODE_OF_CONDUCT.md).
 
 
 

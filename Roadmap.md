@@ -11,8 +11,11 @@ Features we plan to add in the near future. Help wanted, as always.
 - Command Line tool improvements
   - `new` tool to add new post/page/template from an example folder structure.
 
-## Unclaimed Features
-Features we haven't started working on yet, but intend to in the future. Feel free to open a pull request!
+## Help Wanted
+Features we haven't started working on yet, but intend to in the future. Feel
+free to open a pull request!
+- External documentation website.
+- Hot reloading dev server.
 
 
 ## History
