@@ -6,7 +6,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 # 0.2.0 [Unreleased]
 The beta release of Neanderthal.
-- [ ] Prerendered markdown syntax highlighting.
+- [x] Prerendered markdown syntax highlighting.
 - [ ] Markdown Nunjucks tag- towards the unified file format.
 - [ ] Error handling in Nunjucks templates.
 - [ ] Improvements to Frontmatter processing
