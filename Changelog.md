@@ -4,6 +4,15 @@ published to NPM.
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# 0.2.0 [Unreleased]
+The beta release of Neanderthal.
+- [ ] Prerendered markdown syntax highlighting.
+- [ ] Markdown Nunjucks tag- towards the unified file format.
+- [ ] Error handling in Nunjucks templates.
+- [ ] Improvements to Frontmatter processing
+  - [ ] Internal type safety
+  - [ ] User-facing errors and warnings
+
 
 # 0.1.11
 Updated Markdown renderer, draft posts.
