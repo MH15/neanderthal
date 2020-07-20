@@ -52,6 +52,7 @@ export default class Builder {
                 })
                 post.write(buildPath)
             } else {
+                // console.log("draft post")
             }
         })
     }
