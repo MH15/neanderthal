@@ -8,9 +8,37 @@ import { isDir, makeDir, writeFile, deleteDir } from "./helpers/io"
 import { readdir, readFileSync, copy } from "fs-extra"
 import vars from "./helpers/vars"
 import CommandLine from "./CommandLine"
-const nunjucks = require("nunjucks")
+import nunjucks from "nunjucks"
+import MarkdownTag from "./helpers/nunjucks-extensions"
+import markdownIt from "markdown-it"
+var hljs = require('highlight.js')
+
+let md: markdownIt = require('markdown-it')({
+    highlight: function (str, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+            try {
+                return hljs.highlight(lang, str).value
+            } catch (__) { }
+        } else {
+            try {
+                return hljs.highlightAuto(str).value
+            } catch (__) { }
+        }
+
+        return '' // use external default escaping
+    },
+    linkify: true
+})
+
+md = md.use(require('markdown-it-footnote'))
+
+let env = new nunjucks.Environment(new nunjucks.FileSystemLoader(process.cwd()))
+env.addExtension("markdown", new MarkdownTag(md))
 
 export default class Builder {
+    static md = md
+    static nunjucks = env
+
     posts: Map<string, BlogPost>
     pages: Map<string, CustomPage>
     tags: Map<string, BlogPost[]>
@@ -161,7 +189,7 @@ export default class Builder {
     renderIndexPage() {
         let indexPath = join(this.dirPages, "index.njk")
         let content = readFileSync(join(this.dirPages, "index.njk"), "utf8")
-        let html = nunjucks.renderString(content, {
+        let html = Builder.nunjucks.renderString(content, {
             meta: this.nconfig.meta,
             title: "Home"
         })
