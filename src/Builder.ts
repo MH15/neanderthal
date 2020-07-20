@@ -32,9 +32,12 @@ let md: markdownIt = require('markdown-it')({
 
 md = md.use(require('markdown-it-footnote'))
 
+let env = new nunjucks.Environment(new nunjucks.FileSystemLoader(process.cwd()))
+env.addExtension("markdown", new MarkdownTag(md))
+
 export default class Builder {
     static md = md
-    static env = new nunjucks.Environment().addExtension("markdown", new MarkdownTag(Builder.md))
+    static nunjucks = env
 
     posts: Map<string, BlogPost>
     pages: Map<string, CustomPage>
@@ -186,7 +189,7 @@ export default class Builder {
     renderIndexPage() {
         let indexPath = join(this.dirPages, "index.njk")
         let content = readFileSync(join(this.dirPages, "index.njk"), "utf8")
-        let html = nunjucks.renderString(content, {
+        let html = Builder.nunjucks.renderString(content, {
             meta: this.nconfig.meta,
             title: "Home"
         })

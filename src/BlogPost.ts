@@ -5,28 +5,7 @@ import { writeFile, readFile, readFileIfExists } from "./helpers/io"
 import { copy } from "fs-extra"
 import { parse } from "path"
 const frontmatter = require("front-matter")
-import markdownIt from "markdown-it"
-var hljs = require('highlight.js')
-
-
-let md: markdownIt = require('markdown-it')({
-    highlight: function (str, lang) {
-        if (lang && hljs.getLanguage(lang)) {
-            try {
-                return hljs.highlight(lang, str).value
-            } catch (__) { }
-        } else {
-            try {
-                return hljs.highlightAuto(str).value
-            } catch (__) { }
-        }
-
-        return '' // use external default escaping
-    },
-    linkify: true
-})
-
-md = md.use(require('markdown-it-footnote'))
+import Builder from "./Builder"
 
 
 
@@ -70,8 +49,9 @@ export default class BlogPost implements IResource {
         })
     }
 
+    // TODO: render and load shouldn't be separate
     render(data): string {
-        let markdown = md.render(this.body)
+        let markdown = Builder.md.render(this.body)
 
         this.html = this.template.render({
             markdown: markdown,

@@ -40,7 +40,7 @@ export default class CustomPage implements IResource {
     render(data): string {
         let innerHTML = ""
         try {
-            innerHTML = Builder.env.renderString(this.body, {
+            innerHTML = Builder.nunjucks.renderString(this.body, {
                 meta: data.meta || {}
             })
         } catch (err) {
