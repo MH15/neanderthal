@@ -76,9 +76,14 @@ export default class Builder {
         let pageBuildDir = join(this.dirBuild, page.name)
         makeDir(pageBuildDir)
         let pageBuildFile = join(pageBuildDir, "index.html")
-        page.render({
-            meta: this.nconfig.meta
-        })
+        try {
+            page.render({
+                meta: this.nconfig.meta
+            })
+        } catch (err) {
+            this.cli.warn(err)
+        }
+
         await page.write(pageBuildFile)
         return pageBuildFile
     }
@@ -130,9 +135,13 @@ export default class Builder {
             let postPath = join("build", page.name)
             makeDir(postPath)
             let buildPath = join(postPath, "index.html")
-            page.render({
-                meta: this.nconfig.meta
-            })
+            try {
+                page.render({
+                    meta: this.nconfig.meta
+                })
+            } catch (err) {
+                this.cli.error(err)
+            }
             page.write(buildPath)
         })
 

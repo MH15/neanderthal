@@ -87,10 +87,8 @@ export default class BlogPost implements IResource {
     async write(path) {
         // Copy all dependencies
         // TODO: do this better using the new v0.2.0 structure
-        // console.log("COPY", parse(this.path).dir)
         await copy(parse(this.path).dir, parse(path).dir, {
             filter: (src: string, dest: string): boolean => {
-                // console.log(src, ",", this.path)
                 return src !== this.path
             }
         })
