@@ -132,6 +132,10 @@ export default class CommandLine {
         }
     }
 
+    warn(err: NeanderthalError) {
+        console.log(`${c.bold.yellow("Warning")} Code: ${err.code}, ${err.message}`)
+    }
+
     error(err: NeanderthalError) {
         console.log(`${c.bold.red("Error")} Code: ${err.code}, ${err.message}`)
         process.exit(0)
