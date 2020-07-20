@@ -52,7 +52,7 @@ export default class Builder {
                 })
                 post.write(buildPath)
             } else {
-                console.log("draft post")
+                // console.log("draft post")
             }
         })
     }
@@ -218,7 +218,6 @@ export default class Builder {
                         } catch (err) {
                             this.cli.error(err)
                         }
-                        console.log(blogPost.attributes)
                         // Ignore draft posts
                         if (!blogPost.attributes.draft) {
                             return blogPost

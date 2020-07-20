@@ -5,12 +5,31 @@ import { writeFile, readFile, readFileIfExists } from "./helpers/io"
 import { copy } from "fs-extra"
 import { parse } from "path"
 const frontmatter = require("front-matter")
-const marked = require("marked")
 import markdownIt from "markdown-it"
+import MarkdownIt from "markdown-it"
+var hljs = require('highlight.js')
 
-const md = markdownIt({
 
-}).use(require('markdown-it-footnote'))
+let md: markdownIt = require('markdown-it')({
+    highlight: function (str, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+            try {
+                return hljs.highlight(lang, str).value
+            } catch (__) { }
+        } else {
+            try {
+                return hljs.highlightAuto(str).value
+            } catch (__) { }
+        }
+
+        return '' // use external default escaping
+    },
+    linkify: true
+})
+
+md = md.use(require('markdown-it-footnote'))
+
+
 
 export default class BlogPost implements IResource {
     path: string
