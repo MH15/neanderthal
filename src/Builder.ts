@@ -8,9 +8,34 @@ import { isDir, makeDir, writeFile, deleteDir } from "./helpers/io"
 import { readdir, readFileSync, copy } from "fs-extra"
 import vars from "./helpers/vars"
 import CommandLine from "./CommandLine"
-const nunjucks = require("nunjucks")
+import nunjucks from "nunjucks"
+import MarkdownTag from "./helpers/nunjucks-extensions"
+import markdownIt from "markdown-it"
+var hljs = require('highlight.js')
+
+let md: markdownIt = require('markdown-it')({
+    highlight: function (str, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+            try {
+                return hljs.highlight(lang, str).value
+            } catch (__) { }
+        } else {
+            try {
+                return hljs.highlightAuto(str).value
+            } catch (__) { }
+        }
+
+        return '' // use external default escaping
+    },
+    linkify: true
+})
+
+md = md.use(require('markdown-it-footnote'))
 
 export default class Builder {
+    static md = md
+    static env = new nunjucks.Environment().addExtension("markdown", new MarkdownTag(Builder.md))
+
     posts: Map<string, BlogPost>
     pages: Map<string, CustomPage>
     tags: Map<string, BlogPost[]>

@@ -6,7 +6,6 @@ import { copy } from "fs-extra"
 import { parse } from "path"
 const frontmatter = require("front-matter")
 import markdownIt from "markdown-it"
-import MarkdownIt from "markdown-it"
 var hljs = require('highlight.js')
 
 

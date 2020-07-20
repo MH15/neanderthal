@@ -5,6 +5,9 @@ const frontmatter = require("front-matter")
 import * as fs from "fs-extra"
 import { NunjucksRenderError, TempNunjucksRenderError } from "./helpers/exceptions"
 import * as nunjucks from "nunjucks"
+import MarkdownTag from "./helpers/nunjucks-extensions"
+import Builder from "./Builder"
+
 
 
 export default class CustomPage implements IResource {
@@ -37,10 +40,11 @@ export default class CustomPage implements IResource {
     render(data): string {
         let innerHTML = ""
         try {
-            innerHTML = nunjucks.renderString(this.body, {
+            innerHTML = Builder.env.renderString(this.body, {
                 meta: data.meta || {}
             })
         } catch (err) {
+            console.log(err)
             throw new TempNunjucksRenderError(err.message)
         }
 
