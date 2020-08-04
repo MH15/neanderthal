@@ -15,8 +15,8 @@ Features we hope to implement soon. Contributions welcome!
   - [ ] Internal type safety
   - [ ] User-facing errors and warnings
 
-# 0.2.0 [Unreleased]
-The beta release of Neanderthal.
+# 0.1.12
+Polishing user experience for alpha release.
 - [x] Prerendered markdown syntax highlighting.
 - [x] Added `{% markdown %}` tag in Nunjucks templates.
 - [x] Error handling in Nunjucks templates.
