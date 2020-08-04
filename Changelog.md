@@ -13,6 +13,7 @@ The beta release of Neanderthal.
   - [ ] Internal type safety
   - [ ] User-facing errors and warnings
 - [ ] Improve render pipeline.
+- [ ] Documentation updates to support new features.
 
 
 # 0.1.11
