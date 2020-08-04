@@ -2,7 +2,14 @@
 All notable changes to this project will be documented in this file, as
 published to NPM.
 
-This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+This project adheres to [Semantic
+Versioning](https://semver.org/spec/v2.0.0.html).
+
+# Future [unassigned]
+Features we hope to implement soon. Contributions welcome!
+- [ ] Hot reloading the browser on build.
+- [ ] Support for themes built around a standard interface.
+- [ ] Support other templating engines for posts and pages. Maybe even JSX/MDX?
 
 # 0.2.0 [Unreleased]
 The beta release of Neanderthal.

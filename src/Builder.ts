@@ -11,6 +11,7 @@ import CommandLine from "./CommandLine"
 import nunjucks from "nunjucks"
 import MarkdownTag from "./helpers/nunjucks-extensions"
 import markdownIt from "markdown-it"
+import { NunjucksRenderError } from "./helpers/exceptions"
 var hljs = require('highlight.js')
 
 let md: markdownIt = require('markdown-it')({
@@ -32,7 +33,13 @@ let md: markdownIt = require('markdown-it')({
 
 md = md.use(require('markdown-it-footnote'))
 
-let env = new nunjucks.Environment(new nunjucks.FileSystemLoader(process.cwd()))
+let env = new nunjucks.Environment(
+    new nunjucks.FileSystemLoader(process.cwd()),
+    {
+        // @ts-ignore
+        dev: true,
+    }
+)
 env.addExtension("markdown", new MarkdownTag(md))
 
 export default class Builder {
@@ -119,12 +126,18 @@ export default class Builder {
     async renderBlogIndex() {
         let orderedPosts = Array.from(this.posts.values())
         orderedPosts.sort(compareDatePublished)
+        let html = ""
         // Generate the root blog page as a list of recent posts by date
-        let html = this.templates.get(join(vars.TEMPLATES, "blog.njk")).render({
-            blog_posts: orderedPosts,
-            meta: this.nconfig.meta,
-            title: "Blog"
-        })
+        try {
+            html = this.templates.get(join(vars.TEMPLATES, "blog.njk")).render({
+                blog_posts: orderedPosts,
+                meta: this.nconfig.meta,
+                title: "Blog"
+            })
+        } catch (err) {
+            this.cli.warn(err)
+        }
+
         writeFile(join(this.dirBuild, vars.BLOG, "index.html"), html)
     }
 
@@ -189,10 +202,16 @@ export default class Builder {
     renderIndexPage() {
         let indexPath = join(this.dirPages, "index.njk")
         let content = readFileSync(join(this.dirPages, "index.njk"), "utf8")
-        let html = Builder.nunjucks.renderString(content, {
-            meta: this.nconfig.meta,
-            title: "Home"
-        })
+        let html = ""
+        try {
+            html = Builder.nunjucks.renderString(content, {
+                meta: this.nconfig.meta,
+                title: "Home"
+            })
+        } catch (err) {
+            let customError = new NunjucksRenderError(err.name, err.lineno, err.colno)
+            this.cli.warn(customError)
+        }
         writeFile(join(this.dirBuild, "index.html"), html)
 
     }
