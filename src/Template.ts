@@ -2,6 +2,8 @@ import * as fs from "fs-extra"
 import * as path from "path"
 import IResource from "./IResource"
 import { readFile } from "./helpers/io"
+import Builder from "./Builder"
+import { NunjucksRenderError } from "./helpers/exceptions"
 const nunjucks = require("nunjucks")
 
 
@@ -29,7 +31,13 @@ export class Template implements IResource {
      * @param data the nunjucks context
      */
     render(data): string {
-        let html = nunjucks.renderString(this.body, data)
+        let html = ""
+        try {
+            html = Builder.nunjucks.renderString(this.body, data)
+        } catch (err) {
+            // console.log("errr", err)
+            throw new NunjucksRenderError(err.name, err.lineno, err.colno)
+        }
         return html
     }
 

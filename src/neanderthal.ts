@@ -62,6 +62,8 @@ async function serve(cli) {
         // Catch the index page, it is handled seperately
         if (name == join(dirPages, "index.njk")) {
             builder.renderIndexPage()
+            let relativeOutPath = relative(process.cwd(), join(dirBuild, "blog", "index.html"))
+            cli.log(RenderTypes.Generated, relativeOutPath)
             return
         }
 

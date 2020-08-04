@@ -8,9 +8,44 @@ import { isDir, makeDir, writeFile, deleteDir } from "./helpers/io"
 import { readdir, readFileSync, copy } from "fs-extra"
 import vars from "./helpers/vars"
 import CommandLine from "./CommandLine"
-const nunjucks = require("nunjucks")
+import nunjucks from "nunjucks"
+import MarkdownTag from "./helpers/nunjucks-extensions"
+import markdownIt from "markdown-it"
+import { NunjucksRenderError } from "./helpers/exceptions"
+var hljs = require('highlight.js')
+
+let md: markdownIt = require('markdown-it')({
+    highlight: function (str, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+            try {
+                return hljs.highlight(lang, str).value
+            } catch (__) { }
+        } else {
+            try {
+                return hljs.highlightAuto(str).value
+            } catch (__) { }
+        }
+
+        return '' // use external default escaping
+    },
+    linkify: true
+})
+
+md = md.use(require('markdown-it-footnote'))
+
+let env = new nunjucks.Environment(
+    new nunjucks.FileSystemLoader(process.cwd()),
+    {
+        // @ts-ignore
+        dev: true,
+    }
+)
+env.addExtension("markdown", new MarkdownTag(md))
 
 export default class Builder {
+    static md = md
+    static nunjucks = env
+
     posts: Map<string, BlogPost>
     pages: Map<string, CustomPage>
     tags: Map<string, BlogPost[]>
@@ -52,7 +87,7 @@ export default class Builder {
                 })
                 post.write(buildPath)
             } else {
-                console.log("draft post")
+                // console.log("draft post")
             }
         })
     }
@@ -76,9 +111,14 @@ export default class Builder {
         let pageBuildDir = join(this.dirBuild, page.name)
         makeDir(pageBuildDir)
         let pageBuildFile = join(pageBuildDir, "index.html")
-        page.render({
-            meta: this.nconfig.meta
-        })
+        try {
+            page.render({
+                meta: this.nconfig.meta
+            })
+        } catch (err) {
+            this.cli.warn(err)
+        }
+
         await page.write(pageBuildFile)
         return pageBuildFile
     }
@@ -86,12 +126,20 @@ export default class Builder {
     async renderBlogIndex() {
         let orderedPosts = Array.from(this.posts.values())
         orderedPosts.sort(compareDatePublished)
+        let template = this.templates.get(join(vars.TEMPLATES, "blog.njk"))
+        let html = ""
         // Generate the root blog page as a list of recent posts by date
-        let html = this.templates.get(join(vars.TEMPLATES, "blog.njk")).render({
-            blog_posts: orderedPosts,
-            meta: this.nconfig.meta,
-            title: "Blog"
-        })
+        try {
+            html = template.render({
+                blog_posts: orderedPosts,
+                meta: this.nconfig.meta,
+                title: "Blog"
+            })
+        } catch (err) {
+            console.log("err", orderedPosts.length)
+            this.cli.warn(err)
+        }
+
         writeFile(join(this.dirBuild, vars.BLOG, "index.html"), html)
     }
 
@@ -130,9 +178,13 @@ export default class Builder {
             let postPath = join("build", page.name)
             makeDir(postPath)
             let buildPath = join(postPath, "index.html")
-            page.render({
-                meta: this.nconfig.meta
-            })
+            try {
+                page.render({
+                    meta: this.nconfig.meta
+                })
+            } catch (err) {
+                this.cli.error(err)
+            }
             page.write(buildPath)
         })
 
@@ -152,10 +204,16 @@ export default class Builder {
     renderIndexPage() {
         let indexPath = join(this.dirPages, "index.njk")
         let content = readFileSync(join(this.dirPages, "index.njk"), "utf8")
-        let html = nunjucks.renderString(content, {
-            meta: this.nconfig.meta,
-            title: "Home"
-        })
+        let html = ""
+        try {
+            html = Builder.nunjucks.renderString(content, {
+                meta: this.nconfig.meta,
+                title: "Home"
+            })
+        } catch (err) {
+            let customError = new NunjucksRenderError(err.name, err.lineno, err.colno)
+            this.cli.warn(customError)
+        }
         writeFile(join(this.dirBuild, "index.html"), html)
 
     }
@@ -218,7 +276,6 @@ export default class Builder {
                         } catch (err) {
                             this.cli.error(err)
                         }
-                        console.log(blogPost.attributes)
                         // Ignore draft posts
                         if (!blogPost.attributes.draft) {
                             return blogPost

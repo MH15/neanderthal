@@ -3,7 +3,11 @@ import { Template } from "./Template"
 import { writeFile, readFile, ioStats, readFileIfExists } from "./helpers/io"
 const frontmatter = require("front-matter")
 import * as fs from "fs-extra"
-const nunjucks = require("nunjucks")
+import { NunjucksRenderError, TempNunjucksRenderError } from "./helpers/exceptions"
+import * as nunjucks from "nunjucks"
+import MarkdownTag from "./helpers/nunjucks-extensions"
+import Builder from "./Builder"
+
 
 
 export default class CustomPage implements IResource {
@@ -34,9 +38,15 @@ export default class CustomPage implements IResource {
     }
 
     render(data): string {
-        let innerHTML = nunjucks.renderString(this.body, {
-            meta: data.meta || {}
-        })
+        let innerHTML = ""
+        try {
+            innerHTML = Builder.nunjucks.renderString(this.body, {
+                meta: data.meta || {}
+            })
+        } catch (err) {
+            // console.log("errr", err)
+            throw new NunjucksRenderError(err.name, err.lineno, err.colno)
+        }
 
         this.html = this.template.render({
             page: innerHTML,
