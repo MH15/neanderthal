@@ -6,6 +6,7 @@ import { copy } from "fs-extra"
 import { parse } from "path"
 const frontmatter = require("front-matter")
 import Builder from "./Builder"
+import { FrontMatter } from "./helpers/types"
 
 
 
@@ -13,7 +14,7 @@ export default class BlogPost implements IResource {
     path: string
     body: string
 
-    attributes
+    attributes: FrontMatter | any
     authors = []
     template: Template
     html: string
@@ -32,12 +33,14 @@ export default class BlogPost implements IResource {
 
     load(): Promise<BlogPost> {
         this.authors = []
-        this.attributes = []
+        this.attributes = {}
         return new Promise((resolve, reject) => {
             readFileIfExists(this.path).then(data => {
                 // Parse frontmatter meta and markdown body from the file
                 let content = frontmatter(data)
-                this.attributes = content.attributes
+
+                this.attributes = validateFrontMatter(content.attributes)
+
                 this.body = content.body
 
                 this.parseAuthors()
@@ -92,4 +95,12 @@ export default class BlogPost implements IResource {
             })
         }
     }
+}
+
+
+function validateFrontMatter(frontMatter: object): FrontMatter {
+    // @ts-ignore
+    // TODO: actually validate frontmatter
+
+    return frontMatter
 }

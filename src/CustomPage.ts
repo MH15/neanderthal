@@ -44,8 +44,8 @@ export default class CustomPage implements IResource {
                 meta: data.meta || {}
             })
         } catch (err) {
-            console.log(err)
-            throw new TempNunjucksRenderError(err.message)
+            // console.log("errr", err)
+            throw new NunjucksRenderError(err.name, err.lineno, err.colno)
         }
 
         this.html = this.template.render({
