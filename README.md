@@ -43,7 +43,7 @@ Now `npx` will run your project's cached installation of Neanderthal without pol
 
 
 # Documentation
-Full documentation is (in progress) [here](https://github.com/MH15/neanderthal/blob/docs/Docs.md). We plan on moving it to ReadTheDocs or something in the future.
+Full documentation is (in progress) [here](https://github.com/MH15/neanderthal/blob/master/docs/Docs.md). We plan on moving it to ReadTheDocs or something in the future.
 
 ## Starting the Development Server
 Run `npx neanderthal -s` to start a dev server on port 9080. Make changes to
