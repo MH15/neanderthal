@@ -10,15 +10,15 @@ Features we hope to implement soon. Contributions welcome!
 - [ ] Hot reloading the browser on build.
 - [ ] Support for themes built around a standard interface.
 - [ ] Support other templating engines for posts and pages. Maybe even JSX/MDX?
+- [ ] Improvements to Frontmatter processing
+  - [ ] Internal type safety
+  - [ ] User-facing errors and warnings
 
 # 0.2.0 [Unreleased]
 The beta release of Neanderthal.
 - [x] Prerendered markdown syntax highlighting.
 - [x] Added `{% markdown %}` tag in Nunjucks templates.
 - [x] Error handling in Nunjucks templates.
-- [ ] Improvements to Frontmatter processing
-  - [ ] Internal type safety
-  - [ ] User-facing errors and warnings
 - [ ] Improve render pipeline.
 - [ ] Documentation updates to support new features.
 

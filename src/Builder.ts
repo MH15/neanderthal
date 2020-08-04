@@ -126,15 +126,17 @@ export default class Builder {
     async renderBlogIndex() {
         let orderedPosts = Array.from(this.posts.values())
         orderedPosts.sort(compareDatePublished)
+        let template = this.templates.get(join(vars.TEMPLATES, "blog.njk"))
         let html = ""
         // Generate the root blog page as a list of recent posts by date
         try {
-            html = this.templates.get(join(vars.TEMPLATES, "blog.njk")).render({
+            html = template.render({
                 blog_posts: orderedPosts,
                 meta: this.nconfig.meta,
                 title: "Blog"
             })
         } catch (err) {
+            console.log("err", orderedPosts.length)
             this.cli.warn(err)
         }
 

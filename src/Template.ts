@@ -33,9 +33,7 @@ export class Template implements IResource {
     render(data): string {
         let html = ""
         try {
-            html = Builder.nunjucks.renderString(this.body, {
-                meta: data.meta || {}
-            })
+            html = Builder.nunjucks.renderString(this.body, data)
         } catch (err) {
             // console.log("errr", err)
             throw new NunjucksRenderError(err.name, err.lineno, err.colno)

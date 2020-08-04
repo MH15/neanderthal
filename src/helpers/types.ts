@@ -16,6 +16,15 @@ export interface Author {
 
 }
 
+export interface FrontMatter {
+    title: string
+    date_published: string
+    authors?: string[]
+    tags?: string[]
+    draft?: boolean
+    [key: string]: any
+}
+
 
 export enum RenderTypes {
     Copy = 1,  // Copy files without changing
