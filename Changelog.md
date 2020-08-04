@@ -8,6 +8,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 # Future [unassigned]
 Features we hope to implement soon. Contributions welcome!
 - [ ] Hot reloading the browser on build.
+- [ ] Versioned posts.
 - [ ] Support for themes built around a standard interface.
 - [ ] Support other templating engines for posts and pages. Maybe even JSX/MDX?
 - [ ] Improvements to Frontmatter processing
@@ -19,8 +20,8 @@ The beta release of Neanderthal.
 - [x] Prerendered markdown syntax highlighting.
 - [x] Added `{% markdown %}` tag in Nunjucks templates.
 - [x] Error handling in Nunjucks templates.
-- [ ] Improve render pipeline.
-- [ ] Documentation updates to support new features.
+- [x] Improve render pipeline.
+- [x] Documentation updates to support new features.
 
 
 # 0.1.11

@@ -9,30 +9,21 @@ A static hypertext generator for your blog or website.
 https://gitter.im/neanderthal-static-sites/community](https://badges.gitter.im/neanderthal-static-sites/community.svg)](https://gitter.im/neanderthal-static-sites/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Overview
-
-Neanderthal transpiles structured Markdown and Nunjucks content to a static
-blog, with support for custom pages, tagged posts, and authors. You can write
-posts in Markdown with front matter metadata, then customize the Nunjucks
-templates as needed.
+Neanderthal transpiles structured Markdown and Nunjucks content to a static blog, with support for custom  pages, tagged posts, and authors. You can write posts in Markdown with front matter metadata, then customize the Nunjucks templates as needed.
 
 ### Features
 - Blog posts with support for multiple authors.
 - A full tagging system.
 - Author profile pages.
 - Custom pages.
-- Full support of the CommonMark Markdown spec, thanks to [marked](https://marked.js.org).
+- Full support of the CommonMark Markdown spec, thanks to [markdown-t](https://github.com/markdown-it/markdown-it).
 - The power of [Nunjucks](https://mozilla.github.io/nunjucks/) templates.
 - Incremental builds.
   
-See the
-[Changelog](https://github.com/MH15/neanderthal/blob/master/Changelog.md) for a
-full project history.
+See the [Changelog](https://github.com/MH15/neanderthal/blob/master/Changelog.md) for a full project history.
 
 ## Getting Started
-The best-practice way to run Neanderthal is with
-[npx](https://blog.npmjs.org/post/162869356040/introducing-npx-an-npm-package-runner).
-This will ensure you always use the release you started your project with.
-Running the below command to cache the current version of Neanderthal and set up
+The best-practice way to run Neanderthal is with [npx](https://blog.npmjs.org/post/162869356040/introducing-npx-an-npm-package-runner). This will ensure you always use the version you started your project with. Run the below command to cache the current version of Neanderthal and set up
 a new project:
 ```bash
 npx neanderthal
@@ -52,8 +43,7 @@ Now `npx` will run your project's cached installation of Neanderthal without pol
 
 
 # Documentation
-Below are the docs for Neanderthal as it stands today, we'd love to see a pull
-request to set up external documentation.
+Full documentation is (in progress) [here](https://github.com/MH15/neanderthal/blob/docs/Docs.md). We plan on moving it to ReadTheDocs or something in the future.
 
 ## Starting the Development Server
 Run `npx neanderthal -s` to start a dev server on port 9080. Make changes to
@@ -83,24 +73,14 @@ available in **any** Nunjucks template in your entire project.
 ```
 
 ### `authors`
-You must choose a unique URL as the key for each author in the `authors` object.
-An author object must contain `name`,`short_bio` and `bio` fields but may
-contain any additional data. Common examples would be social media URLs that can
-be displayed in the `author.njk` template. Remember: any additional information
-passed into an author object is not rendered by default. You will need to access
-the data in the respective template.
+You must choose a unique URL as the key for each author in the `authors` object. An author object must contain `name`,`short_bio` and `bio` fields but may contain any additional data. Common examples would be social media URLs that can be displayed in the `author.njk` template. Remember: any additional information passed into an author object is not rendered by default. You will need to access the data in the respective template.
 
 ### `config`
 The `config` object controls the build process. This is not yet implemented. **TODO**.
 
 
 ## Templating
-Neanderthal uses the wonderful [Nunjucks](https://mozilla.github.io/nunjucks/)
-templating system. Nunjucks is a Mozilla project designed to bring python's
-[Jinja](https://jinja.palletsprojects.com/en/2.11.x/) templating system to
-JavaScript. You can read the detailed Nunjucks [templating
-documentation](https://mozilla.github.io/nunjucks/templating.html) for more
-info.
+Neanderthal uses the wonderful [Nunjucks](https://mozilla.github.io/nunjucks/) templating system. Nunjucks is a Mozilla project designed to bring python's [Jinja](https://jinja.palletsprojects.com/en/2.11.x/) templating system to JavaScript. You can read the detailed Nunjucks [templating documentation](https://mozilla.github.io/nunjucks/templating.html) for more info.
 
 
 # Addendum
@@ -124,21 +104,16 @@ Please read the project [Code of Conduct](https://github.com/MH15/neanderthal/bl
 
 ## Credits
 This project would not exist without the following fantastic libraries:
+- [nunjucks](https://www.npmjs.com/package/nunjucks) - fully featured templating inspired by [jinja2](https://jinja.palletsprojects.com/en/2.11.x/)
+- [front-matter](https://www.npmjs.com/package/front-matter) - extract meta data (front-matter) from documents.
+- [markdown-it](https://github.com/markdown-it/markdown-it) - markdown parser, done right. 100% CommonMark support, extensions, syntax plugins & high speed 
+- [fs-extra](https://www.npmjs.com/package/fs-extra) - adds file system methods   that aren't included in the native `fs` module
+- [node-watch](https://github.com/yuanchuan/node-watch) - a wrapper and enhancements for fs.watch
+- [highlight.js](https://github.com/highlightjs/highlight.js/) - javascript syntax highlighter
+- [ansi-colors](https://www.npmjs.com/package/ansi-colors) - the fastest Node.js   library for terminal styling engine for javascript
+- [server-handler](https://github.com/vercel/serve-handler) - static server implemented by Vercel
+- [terminal-link](https://www.npmjs.com/package/terminal-link) - create clickable links in the terminal
+- [yesno](https://www.npmjs.com/package/yesno) - a nodejs library for issuing and handling responses to yes/no questions
 - [new.css](https://newcss.net/) - new.css is a classless CSS framework to write modern websites using only HTML.
-- [ansi-colors](https://www.npmjs.com/package/ansi-colors) - the fastest Node.js
-  library for terminal styling
-- [front-matter](https://www.npmjs.com/package/front-matter) - extract meta data
-  (front-matter) from documents.
-- [fs-extra](https://www.npmjs.com/package/fs-extra) - adds file system methods
-  that aren't included in the native `fs` module
-- [nunjucks](https://www.npmjs.com/package/nunjucks) - fully featured templating
-  engine for javascript, inspired by
-  [jinja2](https://jinja.palletsprojects.com/en/2.11.x/)
-- [static-server](https://www.npmjs.com/package/static-server) - a simple http
-  server to serve static resource files from a local directory
-- [terminal-link](https://www.npmjs.com/package/terminal-link) - create
-  clickable links in the terminal
-- [yesno](https://www.npmjs.com/package/yesno) - a nodejs library for issuing
-  and handling responses to yes/no questions
-- [typescript](https://www.typescriptlang.org/) - a superset of JavaScript, adds
-  optional types to JavaScript
+- [markdown-it-footnote](https://github.com/markdown-it/markdown-it-footnote) - footnotes plugin for markdown-it markdown parser 
+- [typescript](https://www.typescriptlang.org/) - a superset of JavaScript, adds   optional types to JavaScript
