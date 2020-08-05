@@ -26,6 +26,7 @@ See the [Changelog](https://github.com/MH15/neanderthal/blob/master/Changelog.md
 The best-practice way to run Neanderthal is with [npx](https://blog.npmjs.org/post/162869356040/introducing-npx-an-npm-package-runner). This will ensure you always use the version you started your project with. Run the below command to cache the current version of Neanderthal and set up
 a new project:
 ```bash
+npm init -y
 npx neanderthal
 ```
 
@@ -43,7 +44,7 @@ Now `npx` will run your project's cached installation of Neanderthal without pol
 
 
 # Documentation
-Full documentation is (in progress) [here](https://github.com/MH15/neanderthal/blob/docs/Docs.md). We plan on moving it to ReadTheDocs or something in the future.
+Full documentation is (in progress) [here](https://github.com/MH15/neanderthal/blob/master/docs/Docs.md). We plan on moving it to ReadTheDocs or something in the future.
 
 ## Starting the Development Server
 Run `npx neanderthal -s` to start a dev server on port 9080. Make changes to
