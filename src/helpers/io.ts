@@ -8,8 +8,12 @@ export const ioStats = {
     reads: 0
 }
 
-export function isDir(dir) {
-    return fs.lstatSync(dir).isDirectory()
+export function isDir(dir): boolean | ResourceNotFound {
+    if (fs.existsSync(dir)) {
+        return fs.lstatSync(dir).isDirectory()
+    } else {
+        throw new ResourceNotFound(`${dir} does not exist`);
+    }
 }
 
 export function makeDir(dir) {
