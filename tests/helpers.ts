@@ -28,6 +28,13 @@ test('helpers/io.isDir()', () => {
     })
 })
 
+test('helpers/io.isFile()', () => {
+    const pathToFile = path.join(process.cwd(), ".gitignore")
+    assert.is(io.isFile(pathToFile), true)
+
+    assert.is(io.isFile(SCRATCH), false)
+})
+
 
 setup()
 test.run()
