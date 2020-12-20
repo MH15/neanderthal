@@ -61,6 +61,11 @@ async function serve(cli) {
             return
         }
 
+        // TODO: If a file has been deleted, mark it as such
+        if(evt == 'remove') {
+            // console.log("deleted", name)
+        }
+
         // Catch the index page, it is handled seperately
         if (name == join(dirPages, "index.njk")) {
             builder.renderIndexPage()
