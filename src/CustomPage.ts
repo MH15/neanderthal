@@ -49,6 +49,7 @@ export default class CustomPage implements IResource {
         }
 
         this.html = this.template.render({
+            title: "this.attributes.title",
             page: innerHTML,
             meta: data.meta || {}
         })
