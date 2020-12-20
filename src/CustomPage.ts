@@ -7,6 +7,7 @@ import { NunjucksRenderError, TempNunjucksRenderError } from "./helpers/exceptio
 import * as nunjucks from "nunjucks"
 import MarkdownTag from "./helpers/nunjucks-extensions"
 import Builder from "./Builder"
+import validateFrontMatter from "./helpers/frontmatter"
 
 
 
@@ -29,7 +30,11 @@ export default class CustomPage implements IResource {
     load(): Promise<CustomPage> {
         return new Promise((resolve, reject) => {
             readFileIfExists(this.path).then(data => {
-                this.body = data
+
+                let content = frontmatter(data)
+
+                this.attributes = validateFrontMatter(content.attributes, this.path)
+                this.body = content.body
                 resolve(this)
             }).catch(err => {
                 reject(err)
@@ -49,6 +54,7 @@ export default class CustomPage implements IResource {
         }
 
         this.html = this.template.render({
+            title: this.attributes.title,
             page: innerHTML,
             meta: data.meta || {}
         })

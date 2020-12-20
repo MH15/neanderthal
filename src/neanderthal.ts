@@ -9,10 +9,12 @@ import CustomPage from "./CustomPage"
 import StaticServer from "./Server/StaticServer"
 
 
+declare var CLI: CommandLine
 
 // Parse command line args
-let root = new CommandLine(false, build, serve)
+var CLI = new CommandLine(false, build, serve)
 
+globalThis.CLI = CLI
 
 // Build
 async function build(cli) {
@@ -57,6 +59,11 @@ async function serve(cli) {
         // Only process events on files
         if (!isFile(name)) {
             return
+        }
+
+        // TODO: If a file has been deleted, mark it as such
+        if(evt == 'remove') {
+            // console.log("deleted", name)
         }
 
         // Catch the index page, it is handled seperately
