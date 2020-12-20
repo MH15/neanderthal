@@ -1,3 +1,5 @@
+// Negative codes are errors, positive are warnings
+
 // When a file is not found.
 export class ResourceNotFound extends Error implements NeanderthalError {
     code: number
@@ -27,6 +29,15 @@ export class TempNunjucksRenderError extends Error implements NeanderthalError {
 
         this.name = this.constructor.name
         this.code = -3
+    }
+}
+
+export class FrontMatterFieldNotFound extends Error implements NeanderthalError {
+    code: number = 1
+    constructor(field, file) {
+        super(`Missing field "${field}" in frontmatter at "${file}"`)
+
+        this.name = this.constructor.name
     }
 }
 

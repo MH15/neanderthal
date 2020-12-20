@@ -7,6 +7,7 @@ import { parse } from "path"
 const frontmatter = require("front-matter")
 import Builder from "./Builder"
 import { FrontMatter } from "./helpers/types"
+import validateFrontMatter from "./helpers/frontmatter"
 
 
 
@@ -39,7 +40,7 @@ export default class BlogPost implements IResource {
                 // Parse frontmatter meta and markdown body from the file
                 let content = frontmatter(data)
 
-                this.attributes = validateFrontMatter(content.attributes)
+                this.attributes = validateFrontMatter(content.attributes, this.path)
 
                 this.body = content.body
 
@@ -98,9 +99,3 @@ export default class BlogPost implements IResource {
 }
 
 
-function validateFrontMatter(frontMatter: object): FrontMatter {
-    // @ts-ignore
-    // TODO: actually validate frontmatter
-
-    return frontMatter
-}
