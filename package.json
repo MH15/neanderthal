@@ -5,7 +5,8 @@
   "main": "cli.js",
   "scripts": {
     "build": "tsc",
-    "test": "jasmine"
+    "test": "jasmine",
+    "link": "npm link"
   },
   "repository": {
     "type": "git",
