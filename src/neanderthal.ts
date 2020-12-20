@@ -9,10 +9,12 @@ import CustomPage from "./CustomPage"
 import StaticServer from "./Server/StaticServer"
 
 
+declare var CLI: CommandLine
 
 // Parse command line args
-let root = new CommandLine(false, build, serve)
+var CLI = new CommandLine(false, build, serve)
 
+globalThis.CLI = CLI
 
 // Build
 async function build(cli) {
