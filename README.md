@@ -16,7 +16,7 @@ Neanderthal transpiles structured Markdown and Nunjucks content to a static blog
 - A full tagging system.
 - Author profile pages.
 - Custom pages.
-- Full support of the CommonMark Markdown spec, thanks to [markdown-t](https://github.com/markdown-it/markdown-it).
+- Full support of the CommonMark Markdown spec, thanks to [markdown-it](https://github.com/markdown-it/markdown-it).
 - The power of [Nunjucks](https://mozilla.github.io/nunjucks/) templates.
 - Incremental builds.
   
