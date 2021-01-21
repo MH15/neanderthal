@@ -51,6 +51,11 @@ Run `npx neanderthal -s` to start a dev server on port 9080. Make changes to
 files and they'll recompile. Refresh the page and it will show your changes.
 
 ## Making a new blog post
+Run
+```bash
+npx neanderthal --post my-new-post
+```
+or
 1. Open the `posts/` directory in your neanderthal project. 
 2. Create a new folder
 with the URL for your post, e.g. "learning-git". 
