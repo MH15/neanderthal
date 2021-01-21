@@ -9,3 +9,7 @@ tags:
 ---
 
 content
+
+```js
+console.log("hello, world")
+```
