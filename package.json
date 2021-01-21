@@ -24,6 +24,7 @@
     "fs-extra": "^8.1.0",
     "highlight.js": "^10.1.1",
     "markdown-it": "^11.0.0",
+    "markdown-it-anchor": "^7.0.0",
     "markdown-it-footnote": "^3.0.2",
     "node-watch": "^0.6.4",
     "nunjucks": "^3.2.2",
