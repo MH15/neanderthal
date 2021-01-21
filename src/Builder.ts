@@ -33,6 +33,7 @@ let md: markdownIt = require('markdown-it')({
 })
 
 md = md.use(require('markdown-it-footnote'))
+md = md.use(require('markdown-it-anchor'), { permalink: true, permalinkBefore: true, permalinkSymbol: '§' })
 
 let env = new nunjucks.Environment(
     new nunjucks.FileSystemLoader(process.cwd()),
