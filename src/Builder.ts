@@ -28,7 +28,8 @@ let md: markdownIt = require('markdown-it')({
 
         return '' // use external default escaping
     },
-    linkify: true
+    linkify: true,
+    html: true
 })
 
 md = md.use(require('markdown-it-footnote'))
