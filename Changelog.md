@@ -15,6 +15,11 @@ Features we hope to implement soon. Contributions welcome!
   - [ ] Internal type safety
   - [ ] User-facing errors and warnings
 
+# 0.1.15
+Fix #37 and #38.
+Adds HTML in Markdown support and permalink anchors.
+
+
 # 0.1.12
 Polishing user experience for alpha release.
 - [x] Prerendered markdown syntax highlighting.

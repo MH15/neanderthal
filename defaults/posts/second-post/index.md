@@ -1,5 +1,5 @@
 ---
-title: Second Posteeee
+title: Second Post
 date_published: 2020-6-20
 authors:
     - peter-hall
@@ -8,5 +8,5 @@ tags:
     - test
 ---
 
-# Secondus post
-yeetus aaaa
+# Second post
+yee
