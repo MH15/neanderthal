@@ -3,7 +3,7 @@ import { existsSync, copy } from "fs-extra"
 import { join } from "path"
 import terminalLink from "terminal-link"
 import yesno from 'yesno'
-import { readFile, writeFile } from "./helpers/io"
+import { readFile, writeFile, isDir } from "./helpers/io"
 import { RenderTypes } from "./helpers/types"
 import { NeanderthalError, ResourceNotFound } from "./helpers/exceptions"
 /**
@@ -50,6 +50,11 @@ export default class CommandLine {
                     case '--version':
                         this.showVersion()
                         break
+                    case '-p':
+                    case '--post':
+                        let name = this.args[1] || "default"
+                        this.newPost(name)
+                        break
 
                 }
             } else {
@@ -59,6 +64,27 @@ export default class CommandLine {
             this.showOnboarding()
         }
 
+
+    }
+
+    async newPost(name: string) {
+        console.log(c.bold.cyan(`Creating a new blog post named "${name}..."`))
+
+        let proceed = false;
+        if (existsSync(join(this.cwd, "posts", name))) {
+            const overwrite = await yesno({
+                question: `Overwrite existing blog post named "${name}"? (y/N)`,
+                defaultValue: false
+            })
+            if (!overwrite) {
+                console.log(c.red("Exiting, failed."))
+                return
+            }
+        }
+        let defaults = join(__dirname, "..", "defaults")
+        await copy(join(defaults, "posts", "hello-world"), join(this.cwd, "posts", name))
+
+        console.log(c.green("Exiting, success."))
 
     }
 
@@ -108,6 +134,13 @@ export default class CommandLine {
             let row = `  -${option.short}, --${option.long}`.padEnd(28)
             row += option.help
             console.log(row)
+            if (option.parameters) {
+                for (let param of option.parameters) {
+                    let paramsRow = `     [${param.name}]`.padEnd(28)
+                    paramsRow += param.info
+                    console.log(paramsRow)
+                }
+            }
         }
         console.log("When no options are included, a full build is performed.")
         console.log(c.cyan(`Visit the ${terminalLink("docs", "https://github.com/mh15/neanderthal")} for more information.`))
@@ -165,5 +198,16 @@ let options = [
         short: "s",
         long: "serve",
         help: "start dev server with incremental builds"
+    },
+    {
+        short: "p",
+        long: "post",
+        parameters: [
+            {
+                name: "name",
+                info: "name for the new post"
+            }
+        ],
+        help: "create a new post"
     }
 ]

@@ -12,15 +12,12 @@ https://gitter.im/neanderthal-static-sites/community](https://badges.gitter.im/n
 Neanderthal transpiles structured Markdown and Nunjucks content to a static blog, with support for custom  pages, tagged posts, and authors. You can write posts in Markdown with front matter metadata, then customize the Nunjucks templates as needed.
 
 ### Features
-- Blog posts with support for multiple authors.
-- A full tagging system.
-- Author profile pages.
-- Custom pages.
-- Full support of the CommonMark Markdown spec, thanks to [markdown-it](https://github.com/markdown-it/markdown-it).
-- The power of [Nunjucks](https://mozilla.github.io/nunjucks/) templates.
+- Blogging with support for multiple authors, post tags, and custom pages. 
 - Incremental builds.
+- CommonMark Markdown and Nunjucks templates.
   
 See the [Changelog](https://github.com/MH15/neanderthal/blob/master/Changelog.md) for a full project history.
+
 
 ## Getting Started
 The best-practice way to run Neanderthal is with [npx](https://blog.npmjs.org/post/162869356040/introducing-npx-an-npm-package-runner). This will ensure you always use the version you started your project with. Run the below command to cache the current version of Neanderthal and set up
@@ -51,6 +48,11 @@ Run `npx neanderthal -s` to start a dev server on port 9080. Make changes to
 files and they'll recompile. Refresh the page and it will show your changes.
 
 ## Making a new blog post
+Run
+```bash
+npx neanderthal --post my-new-post
+```
+or
 1. Open the `posts/` directory in your neanderthal project. 
 2. Create a new folder
 with the URL for your post, e.g. "learning-git". 
@@ -81,7 +83,7 @@ The `config` object controls the build process. This is not yet implemented. **T
 
 
 ## Templating
-Neanderthal uses the wonderful [Nunjucks](https://mozilla.github.io/nunjucks/) templating system. Nunjucks is a Mozilla project designed to bring python's [Jinja](https://jinja.palletsprojects.com/en/2.11.x/) templating system to JavaScript. You can read the detailed Nunjucks [templating documentation](https://mozilla.github.io/nunjucks/templating.html) for more info.
+Neanderthal uses the wonderful [Nunjucks](https://mozilla.github.io/nunjucks/) templating system. Nunjucks is a Mozilla project designed to bring Python's [Jinja](https://jinja.palletsprojects.com/en/2.11.x/) templating system to JavaScript. You can read the detailed Nunjucks [templating documentation](https://mozilla.github.io/nunjucks/templating.html) for more info.
 
 
 # Addendum
