@@ -44,9 +44,12 @@ let env = new nunjucks.Environment(
 )
 env.addExtension("markdown", new MarkdownTag(md))
 
+
 export default class Builder {
     static md = md
     static nunjucks = env
+    static version = require(join(__dirname, "..", "package.json")).version
+
 
     posts: Map<string, BlogPost>
     pages: Map<string, CustomPage>
@@ -210,7 +213,8 @@ export default class Builder {
         try {
             html = Builder.nunjucks.renderString(content, {
                 meta: this.nconfig.meta,
-                title: "Home"
+                title: "Home",
+                version: Builder.version
             })
         } catch (err) {
             let customError = new NunjucksRenderError(err.name, err.lineno, err.colno)

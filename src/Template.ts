@@ -4,12 +4,15 @@ import IResource from "./IResource"
 import { readFile } from "./helpers/io"
 import Builder from "./Builder"
 import { NunjucksRenderError } from "./helpers/exceptions"
+import { version } from 'os';
 const nunjucks = require("nunjucks")
 
 
 export class Template implements IResource {
     path: string
     body: string
+
+
     constructor(path: string) {
         this.path = path
     }
@@ -32,6 +35,7 @@ export class Template implements IResource {
      */
     render(data): string {
         let html = ""
+        data.version = Builder.version
         try {
             html = Builder.nunjucks.renderString(this.body, data)
         } catch (err) {
