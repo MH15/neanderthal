@@ -21,7 +21,7 @@
   "dependencies": {
     "ansi-colors": "^4.1.1",
     "front-matter": "^4.0.2",
-    "fs-extra": "^8.1.0",
+    "fs-extra": "^9.0.0",
     "highlight.js": "^10.1.1",
     "markdown-it": "^11.0.0",
     "markdown-it-anchor": "^7.0.0",
